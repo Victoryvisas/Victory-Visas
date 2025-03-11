@@ -1,4 +1,6 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 // Importing images from the assets folder
 import southAfricaFlag from "../assets/south_africa.png";
@@ -9,6 +11,8 @@ import ukFlag from "../assets/UK.png";
 import canadaFlag from "../assets/canada.png";
 
 const CountriesSection = () => {
+  const navigate = useNavigate();
+
   const countries = [
     { name: "South Africa", path: "/south-africa", flag: southAfricaFlag },
     { name: "New Zealand", path: "/new-zealand", flag: newZealandFlag },
@@ -18,39 +22,77 @@ const CountriesSection = () => {
     { name: "Canada", path: "/canada", flag: canadaFlag },
   ];
 
+  // Animation Variants
+  const containerVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        delayChildren: 0.2,
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
   return (
-    <div className="bg-gray-100 py-8">
+    <motion.div
+      id="countries-section"
+      className="bg-gray-100 py-8"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       {/* Section Title */}
-      <h2 className="text-center text-3xl font-bold text-gray-800 mb-8">
+      <motion.h2
+        className="text-center text-3xl font-bold text-gray-800 mb-8 px-4 sm:px-0"
+        variants={itemVariants}
+      >
         Immigration Countries
-      </h2>
+      </motion.h2>
 
       {/* Countries Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4 sm:px-6">
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4 sm:px-6 md:px-12"
+        variants={containerVariants}
+      >
         {countries.map((country) => (
-          <div
+          <motion.div
             key={country.name}
-            className="bg-white rounded-xl shadow-md overflow-hidden transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg"
+            onClick={() => navigate(country.path)}
+            className="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg"
+            variants={itemVariants}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             {/* Country Flag */}
             <div className="p-2">
-              <img
+              <motion.img
                 src={country.flag}
                 alt={country.name}
-                className="w-full h-[300px] object-cover rounded-lg transition-transform duration-300 ease-in-out hover:scale-110"
+                 
+                className="w-full h-64 object-cover rounded-lg transition-transform duration-300 ease-in-out"
               />
             </div>
 
             {/* Country Name */}
             <div className="text-center pb-4">
-              <h3 className="text-lg font-semibold text-gray-700 transition-colors duration-300 ease-in-out hover:text-blue-500">
+              <motion.h3
+                className="text-lg font-semibold text-gray-700 transition-colors duration-300 ease-in-out hover:text-blue-500"
+                whileHover={{ color: "#3B82F6" }}
+              >
                 {country.name}
-              </h3>
+              </motion.h3>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

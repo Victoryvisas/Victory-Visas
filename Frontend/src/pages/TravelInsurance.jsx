@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import australia from "../assets/australia.png";
+import { motion } from "framer-motion";
+import travel_insurance_photo from "../assets/australia.png";
 
 const TravelInsurance = () => {
   const [formData, setFormData] = useState({
@@ -9,176 +10,185 @@ const TravelInsurance = () => {
     destination: "",
     travelDates: "",
   });
+
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData({ ...formData, [id]: value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" })); // Clear error for the field
   };
 
-  const validateForm = () => {
+  const validate = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Name is required.";
-    if (!formData.contact.trim()) newErrors.contact = "Contact is required.";
-    if (!formData.email.trim()) newErrors.email = "Email is required.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-      newErrors.email = "Enter a valid email address.";
-    if (!formData.destination.trim()) newErrors.destination = "Destination is required.";
-    if (!formData.travelDates.trim()) newErrors.travelDates = "Travel dates are required.";
+    if (!formData.contact.trim() || !/^[0-9]+$/.test(formData.contact))
+      newErrors.contact = "Valid contact number is required.";
+    if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Valid email is required.";
+    if (!formData.destination.trim())
+      newErrors.destination = "Destination is required.";
+    if (!formData.travelDates)
+      newErrors.travelDates = "Travel dates are required.";
+
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      console.log("Form submitted successfully", formData);
+    if (validate()) {
       alert("Form submitted successfully!");
-      setFormData({ name: "", contact: "", email: "", destination: "", travelDates: "" });
-      setErrors({});
+      // Perform form submission logic here
     }
   };
 
-  return (
-    <div className="flex flex-col md:flex-row items-start p-8 space-y-6 md:space-y-0 md:space-x-8">
-      {/* Left Side Content */}
-      <div className="md:w-1/2">
-        <h1 className="text-3xl font-bold mb-4 text-cyan-600">Travel Insurance: Your Essential Travel Companion</h1>
-        <p className="mb-4">
-          When planning your next trip, whether it's a relaxing vacation, a business journey, or an adventurous exploration, one thing you should never overlook is travel insurance. Unexpected events can happen at any time, and travel insurance is designed to protect you from the unexpected. With comprehensive coverage, you can enjoy your travels knowing that you're financially protected, no matter what comes your way.
-        </p>
-        <h2 className="text-2xl font-semibold mb-2">What is Travel Insurance?</h2>
-        <p className="mb-4">
-          Travel insurance is a type of insurance policy that covers unexpected events or emergencies that may occur while you're traveling. It provides financial protection against a wide range of issues, including medical emergencies, trip cancellations, lost luggage, flight delays, and even more severe situations like natural disasters or accidents. Travel insurance can be purchased for both international and domestic trips, depending on the type of coverage you need.
-        </p>
-        <h2 className="text-2xl font-semibold mb-2">Why Do You Need Travel Insurance?</h2>
-        <p className="mb-4">
-          While traveling can be exciting and fulfilling, it can also come with its fair share of uncertainties. A single missed flight, a sudden illness, or lost luggage can quickly turn your dream vacation into a nightmare.
-        </p>
-        <h2 className="text-2xl font-semibold mb-2">Types of Travel Insurance Coverage</h2>
-        <p className="mb-4">
-          Travel insurance plans come in a variety of options, each offering specific coverage. You can choose a plan based on your travel needs, whether you're going on a short trip or a lengthy international journey. The main types of coverage include:
-        </p>
-        <ul className="list-disc list-inside mb-4">
-          <li><strong>Medical Insurance:</strong> Covers emergency medical expenses, evacuation, and hospital stays.</li>
-          <li><strong>Trip Cancellation and Interruption Insurance:</strong> Reimburses you for pre-paid, non-refundable trip costs if you have to cancel or cut your trip short due to unforeseen reasons.</li>
-          <li><strong>Baggage Loss and Delay Insurance:</strong> Protects your luggage and personal belongings in case of theft, loss, or delay.</li>
-          <li><strong>Flight Delay Insurance:</strong> Covers costs incurred due to flight delays, such as meals, accommodations, and rebooking fees.</li>
-          <li><strong>Accidental Death and Dismemberment Insurance:</strong> Provides financial protection in the event of death or serious injury while traveling.</li>
-        </ul>
-        <h2 className="text-2xl font-semibold mb-2">Victory Visas: Helping You Travel Smoothly and Securely</h2>
-        <p className="mb-4">
-          At Victory Visas, we understand that navigating the complexities of travel planning can be overwhelming. That's why we’re here to guide you every step of the way, ensuring that your travel experience is not only smooth but also fully insured.
-        </p>
-        <p className="mb-4">
-          Our partnership with leading travel insurance providers means we can help you secure the best travel insurance coverage tailored to your needs. Whether you're traveling for business, leisure, or studying abroad, we provide you with the right tools to protect your journey.
-        </p>
-        <p className="mb-4">
-          Here's how Victory Visas can help you travel with peace of mind:
-        </p>
-        <ul className="list-disc list-inside mb-4">
-          <li><strong>Expert Assistance with Insurance:</strong> Our team will help you select the most suitable travel insurance plan that meets your specific needs, offering you protection in case of unexpected events.</li>
-          <li><strong>Comprehensive Coverage:</strong> With our insurance options, you're covered for medical emergencies, trip cancellations, lost baggage, flight delays, and more. Whatever happens during your travels, we’ve got you covered.</li>
-          <li><strong>Streamlined Travel Experience:</strong> We not only assist with your visa and travel documentation but also ensure you are well-prepared for unforeseen circumstances by recommending reliable insurance options.</li>
-          <li><strong>Stress-Free Travel Planning:</strong> Let Victory Visas take the stress out of your travel preparations, so you can focus on enjoying your trip without worrying about potential risks.</li>
-        </ul>
-        <p className="mb-4">
-          Whether you are heading on a short getaway or a long-term international adventure, Victory Visas is here to ensure that your travels are protected from start to finish. With the right travel insurance in place, you can travel with the confidence that any challenges that arise will be handled smoothly.
-        </p>
-      </div>
+  const renderInputField = ({ label, name, type, placeholder }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <label className="block font-medium mb-2 text-gray-600">{label}</label>
+      <input
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        value={formData[name]}
+        onChange={handleChange}
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+      />
+      {errors[name] && (
+        <p className="text-red-500 text-sm mt-1">{errors[name]}</p>
+      )}
+    </motion.div>
+  );
 
-      {/* Right Side Image and Form */}
-      <div className="md:w-1/2">
-        <img
-          src={australia}
-          alt="Travel Insurance"
-          className="w-full h-60 object-cover rounded-lg mb-6"
-        />
-        <h2 className="text-2xl font-semibold mb-4">Travel Insurance Enquiry Form</h2>
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="name" className="block text-lg font-medium mb-2">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-2"
-              placeholder="Your Name"
-            />
-            {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+  return (
+    <motion.div
+      className="p-4 sm:p-6 lg:p-12 bg-gradient-to-b from-white to-gray-100 min-h-screen"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      {/* Hero Section */}
+      <motion.div
+        className="flex flex-col lg:flex-row items-center gap-8"
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="flex-1">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center lg:text-left mb-6 text-cyan-600">
+            Travel Insurance: Your Essential Travel Companion
+          </h1>
+          <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
+            When planning your next trip, whether it's a relaxing vacation, a
+            business journey, or an adventurous exploration, one thing you
+            should never overlook is travel insurance. Unexpected events can
+            happen at any time, and travel insurance is designed to protect you
+            from the unexpected. With comprehensive coverage, you can enjoy
+            your travels knowing that you're financially protected, no matter
+            what comes your way.
+          </p>
+        </div>
+        <div className="flex-1">
+          <motion.img
+            src={travel_insurance_photo}
+            alt="Travel Insurance"
+            className="rounded-lg shadow-xl w-full"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+          />
+        </div>
+      </motion.div>
+
+      {/* Information Sections */}
+      {[
+        {
+          title: "What is Travel Insurance?",
+          content:
+            "Travel insurance is a type of insurance policy that covers unexpected events or emergencies that may occur while you're traveling. It provides financial protection against a wide range of issues, including medical emergencies, trip cancellations, lost luggage, flight delays, and even more severe situations like natural disasters or accidents. Travel insurance can be purchased for both international and domestic trips, depending on the type of coverage you need.",
+        },
+        {
+          title: "Why Do You Need Travel Insurance?",
+          content:
+            "While traveling can be exciting and fulfilling, it can also come with its fair share of uncertainties. A single missed flight, a sudden illness, or lost luggage can quickly turn your dream vacation into a nightmare.",
+        },
+      ].map((section, idx) => (
+        <motion.div
+          key={idx}
+          className="mt-12 sm:mt-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: idx * 0.2 }}
+        >
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-6 sm:mb-8 text-cyan-600 text-center">
+            {section.title}
+          </h2>
+          <div className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
+            {section.content}
           </div>
-          <div>
-            <label htmlFor="contact" className="block text-lg font-medium mb-2">
-              Contact
-            </label>
-            <input
-              type="text"
-              id="contact"
-              value={formData.contact}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-2"
-              placeholder="Your Contact Number"
-            />
-            {errors.contact && <p className="text-red-500 text-sm">{errors.contact}</p>}
+        </motion.div>
+      ))}
+
+      {/* Inquiry Form */}
+      <motion.div
+        className="mt-12 sm:mt-16"
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-6 sm:mb-8 text-cyan-600 text-center">
+          Travel Insurance Inquiry Form
+        </h2>
+        <form
+          className="bg-white p-4 sm:p-8 rounded-lg shadow-lg max-w-full sm:max-w-4xl mx-auto"
+          onSubmit={handleSubmit}
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            {[
+              {
+                label: "Name",
+                name: "name",
+                type: "text",
+                placeholder: "Enter your name",
+              },
+              {
+                label: "Contact",
+                name: "contact",
+                type: "number",
+                placeholder: "Enter your contact number",
+              },
+              {
+                label: "Email",
+                name: "email",
+                type: "email",
+                placeholder: "Enter your email",
+              },
+              {
+                label: "Destination",
+                name: "destination",
+                type: "text",
+                placeholder: "Enter your destination",
+              },
+              {
+                label: "Travel Dates",
+                name: "travelDates",
+                type: "date",
+              },
+            ].map((field, idx) => renderInputField(field))}
           </div>
-          <div>
-            <label htmlFor="email" className="block text-lg font-medium mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-2"
-              placeholder="Your Email Address"
-            />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-          </div>
-          <div>
-            <label htmlFor="destination" className="block text-lg font-medium mb-2">
-              Destination
-            </label>
-            <input
-              type="text"
-              id="destination"
-              value={formData.destination}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-2"
-              placeholder="Your Travel Destination"
-            />
-            {errors.destination && (
-              <p className="text-red-500 text-sm">{errors.destination}</p>
-            )}
-          </div>
-          <div>
-            <label htmlFor="travelDates" className="block text-lg font-medium mb-2">
-              Travel Dates
-            </label>
-            <input
-              type="text"
-              id="travelDates"
-              value={formData.travelDates}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-2"
-              placeholder="Your Travel Dates"
-            />
-            {errors.travelDates && (
-              <p className="text-red-500 text-sm">{errors.travelDates}</p>
-            )}
-          </div>
-          <button
+          <motion.button
             type="submit"
-            className="bg-cyan-500 text-white px-4 py-2 rounded-lg hover:bg-cyan-600"
+            className="mt-6 sm:mt-8 w-full bg-cyan-500 text-white text-sm sm:text-lg px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow hover:bg-cyan-600 transition duration-300"
+            whileHover={{ scale: 1.05 }}
           >
             Submit
-          </button>
+          </motion.button>
         </form>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
