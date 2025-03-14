@@ -4,19 +4,19 @@ import { motion } from "framer-motion";
 function WhyUs() {
   const features = [
     {
-      icon: <FaUserFriends size={40} className="text-orange-500" />,
+      icon: <FaUserFriends size={40} className="text-cyan-700" />,
       title: "Exceptional Staff",
     },
     {
-      icon: <FaAward size={40} className="text-orange-500" />,
+      icon: <FaAward size={40} className="text-cyan-700" />,
       title: "Premium Quality",
     },
     {
-      icon: <FaHandHoldingUsd size={40} className="text-orange-500" />,
+      icon: <FaHandHoldingUsd size={40} className="text-cyan-700" />,
       title: "Affordable Pricing",
     },
     {
-      icon: <FaHeart size={40} className="text-orange-500" />,
+      icon: <FaHeart size={40} className="text-cyan-700" />,
       title: "High Industry Standards",
     },
   ];

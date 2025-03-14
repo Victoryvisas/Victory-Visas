@@ -19,14 +19,13 @@ const Navbar = () => {
         if (element) {
           element.scrollIntoView({ behavior: "smooth" });
         }
-      }, 100);
+      }, 1000);
     } else {
       const element = document.querySelector(hash);
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
       }
     }
-    setIsMenuOpen(false); // Close the menu after navigating
   };
 
   return (
@@ -60,7 +59,6 @@ const Navbar = () => {
               smooth
               to="#"
               className="text-lg hover:text-white hover:bg-cyan-500 p-2 rounded transition duration-300"
-              onClick={() => setIsMenuOpen(false)}
             >
               Home
             </HashLink>
@@ -95,7 +93,9 @@ const Navbar = () => {
                 <Link
                   to="/business-visas"
                   className="block"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setVisaDropdown(false), setIsMenuOpen(false);
+                  }}
                 >
                   Business Visa
                 </Link>
@@ -104,7 +104,9 @@ const Navbar = () => {
                 <Link
                   to="/tourist-visas"
                   className="block"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setVisaDropdown(false), setIsMenuOpen(false);
+                  }}
                 >
                   Tourist Visa
                 </Link>
@@ -113,7 +115,9 @@ const Navbar = () => {
                 <Link
                   to="/student-visas"
                   className="block"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setVisaDropdown(false), setIsMenuOpen(false);
+                  }}
                 >
                   Student Visa
                 </Link>
@@ -122,7 +126,9 @@ const Navbar = () => {
                 <Link
                   to="/permanent-residency"
                   className="block"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setVisaDropdown(false), setIsMenuOpen(false);
+                  }}
                 >
                   Permanent Residency
                 </Link>
@@ -135,7 +141,7 @@ const Navbar = () => {
         <li
           className="mx-4 relative group my-2 md:my-0"
           onMouseEnter={() =>
-            window.innerWidth > 768 && setImmigrationDropdown(true)
+            window.innerWidth > 1000 && setImmigrationDropdown(true)
           }
           onMouseLeave={() =>
             window.innerWidth > 768 && setImmigrationDropdown(false)
@@ -156,7 +162,10 @@ const Navbar = () => {
                 <Link
                   to="/south-africa"
                   className="block"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setImmigrationDropdown(false);
+                    setIsMenuOpen(false); // Close menu
+                  }}
                 >
                   South Africa
                 </Link>
@@ -165,7 +174,10 @@ const Navbar = () => {
                 <Link
                   to="/australia"
                   className="block"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setImmigrationDropdown(false);
+                    setIsMenuOpen(false); // Close menu
+                  }}
                 >
                   Australia
                 </Link>
@@ -174,7 +186,10 @@ const Navbar = () => {
                 <Link
                   to="/new-zealand"
                   className="block"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setImmigrationDropdown(false);
+                    setIsMenuOpen(false); // Close menu
+                  }}
                 >
                   New Zealand
                 </Link>
@@ -183,7 +198,10 @@ const Navbar = () => {
                 <Link
                   to="/uk"
                   className="block"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setImmigrationDropdown(false);
+                    setIsMenuOpen(false); // Close menu
+                  }}
                 >
                   UK
                 </Link>
@@ -192,7 +210,10 @@ const Navbar = () => {
                 <Link
                   to="/usa"
                   className="block"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setImmigrationDropdown(false);
+                    setIsMenuOpen(false); // Close menu
+                  }}
                 >
                   USA
                 </Link>
@@ -201,7 +222,10 @@ const Navbar = () => {
                 <Link
                   to="/canada"
                   className="block"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setImmigrationDropdown(false);
+                    setIsMenuOpen(false); // Close menu
+                  }}
                 >
                   Canada
                 </Link>
@@ -215,7 +239,6 @@ const Navbar = () => {
           <Link
             to="/flight-tickets"
             className="text-lg hover:text-white hover:bg-cyan-500 p-2 rounded transition duration-300"
-            onClick={() => setIsMenuOpen(false)}
           >
             Flight Tickets
           </Link>
@@ -224,7 +247,6 @@ const Navbar = () => {
           <Link
             to="/travel-insurance"
             className="text-lg hover:text-white hover:bg-cyan-500 p-2 rounded transition duration-300"
-            onClick={() => setIsMenuOpen(false)}
           >
             Travel Insurance
           </Link>
@@ -237,7 +259,6 @@ const Navbar = () => {
               smooth
               to="#contact-us"
               className="text-lg hover:text-white hover:bg-cyan-500 p-2 rounded transition duration-300"
-              onClick={() => setIsMenuOpen(false)}
             >
               Contact Us
             </HashLink>
