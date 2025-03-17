@@ -1,4 +1,5 @@
-import  { useState } from "react";
+import { useState } from "react";
+import axios from "axios"; // Import Axios for API calls
 import aboutImage from "../assets/aboutus.jpg";
 
 const AdminAboutUs = () => {
@@ -22,6 +23,8 @@ const AdminAboutUs = () => {
         "Our services are affordably priced without compromising on quality, offering the best value for our clients.",
     },
   ]);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleTextChange = (e) => {
     setAboutText(e.target.value);
@@ -32,6 +35,21 @@ const AdminAboutUs = () => {
     updatedServices[index].description = newValue;
     setServices(updatedServices);
   };
+
+  const BASE_URL = "http://localhost:5000";
+
+  const handleSaveChanges = async () => {
+    try {
+      const response = await axios.put(`${BASE_URL}/api/about`, {
+        aboutText,
+        services,
+      });
+      console.log("Successfully updated:", response.data);
+    } catch (error) {
+      console.error("Error updating About Us content:", error);
+    }
+  };
+  
 
   return (
     <section className="p-6 bg-white shadow-lg rounded-lg">
@@ -56,9 +74,19 @@ const AdminAboutUs = () => {
         </div>
       ))}
       
-      <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600">
-        Save Changes
+      <button
+        className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600"
+        onClick={handleSaveChanges}
+        disabled={loading}
+      >
+        {loading ? "Saving..." : "Save Changes"}
       </button>
+      
+      {message && (
+        <p className={`mt-4 ${message.includes("Failed") ? "text-red-500" : "text-green-500"}`}>
+          {message}
+        </p>
+      )}
     </section>
   );
 };

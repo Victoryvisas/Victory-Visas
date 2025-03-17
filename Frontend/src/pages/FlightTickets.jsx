@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import flight_photo from "../assets/australia.png";
+import flight_photo from "../assets/flight.jpg";
 
 const FlightTickets = () => {
   const [formData, setFormData] = useState({
@@ -118,19 +118,31 @@ const FlightTickets = () => {
           {[
             {
               title: "Customized Flight Options",
-              desc: "We take the time to understand your travel preferences, offering you personalized flight options based on your schedule, destination, and comfort level.",
+              desc: "We take the time to understand your travel preferences, offering you personalized flight options based on your schedule, destination, and comfort level. Whether you need direct flights, stopovers, or special requests for seating, we ensure your journey is tailored to meet your specific requirements.",
             },
             {
               title: "Best Price Guarantee",
-              desc: "Our flight booking services ensure that you get the best prices available, with access to special deals and discounts.",
+              desc: "At Victory Visas, we aim to provide you with the most cost-effective flight options. Our flight booking services ensure that you get the best prices available, with access to special deals and discounts, so you can travel affordably without compromising on quality.",
             },
             {
               title: "Convenient Booking Process",
-              desc: "Our team handles all aspects of the booking process, from selecting the right flights to confirming your reservation.",
+              desc: "Booking your flights with Victory Visas is easy and efficient. Our team handles all aspects of the booking process, from selecting the right flights to confirming your reservation. All you need to do is sit back and relax while we take care of the details.",
             },
             {
               title: "Flexible Travel Options",
-              desc: "We offer flexible booking options that allow you to adjust your itinerary with minimal hassle.",
+              desc: "We understand that travel plans can change. That's why we offer flexible booking options that allow you to adjust your itinerary with minimal hassle. Whether you need to change your travel dates or require last-minute adjustments, we ensure you have the flexibility to make those changes without stress.",
+            },
+            {
+              title: "Group Travel & Corporate Bookings",
+              desc: "Whether you are traveling with family, friends, or colleagues, we offer group travel services to ensure that everyone is on the same flight with smooth coordination. For corporate travel, we offer special group rates and easy coordination for business trips, conferences, and events.",
+            },
+            {
+              title: "Global Destinations",
+              desc: "Our flight booking services cover a wide range of international destinations. Whether you’re flying to Europe, Asia, the Americas, or any other region, we offer global flight options that ensure you can reach your destination comfortably and on time.",
+            },
+            {
+              title: "Dedicated Support",
+              desc: "From the moment you contact us, our customer support team is with you every step of the way. Should you encounter any issues or need assistance with your flight, our dedicated support team is available to provide prompt solutions, ensuring that your travel experience is as seamless as possible.",
             },
           ].map((service, index) => (
             <motion.li

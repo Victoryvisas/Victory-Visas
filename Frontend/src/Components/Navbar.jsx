@@ -11,6 +11,9 @@ const Navbar = () => {
   const [visaDropdown, setVisaDropdown] = useState(false);
   const [immigrationDropdown, setImmigrationDropdown] = useState(false);
 
+  let visaDropdownTimer;
+  let immigrationDropdownTimer;
+
   const handleHashLink = (path, hash) => {
     if (location.pathname !== "/") {
       navigate(path);
@@ -19,7 +22,7 @@ const Navbar = () => {
         if (element) {
           element.scrollIntoView({ behavior: "smooth" });
         }
-      }, 1000);
+      }, 100);
     } else {
       const element = document.querySelector(hash);
       if (element) {
@@ -28,13 +31,33 @@ const Navbar = () => {
     }
   };
 
+  const handleMouseEnterVisa = () => {
+    clearTimeout(visaDropdownTimer);
+    setVisaDropdown(true);
+  };
+
+  const handleMouseLeaveVisa = () => {
+    visaDropdownTimer = setTimeout(() => setVisaDropdown(false), 300); // Delay of 300ms
+  };
+
+  const handleMouseEnterImmigration = () => {
+    clearTimeout(immigrationDropdownTimer);
+    setImmigrationDropdown(true);
+  };
+
+  const handleMouseLeaveImmigration = () => {
+    immigrationDropdownTimer = setTimeout(() => setImmigrationDropdown(false), 300); // Delay of 300ms
+  };
+
   return (
     <nav className="p-4 bg-white shadow sticky top-0 z-50 flex items-center justify-between">
       {/* Logo Section */}
       <div className="flex items-center">
-        <img className="h-10 inline mr-2" src={logo} alt="Logo" />
+        <Link to='/'><img className="h-10 inline mr-2" src={logo} alt="Logo" /></Link>
         <span className="text-xl font-bold cursor-pointer text-cyan-600">
+          <Link to='/'>
           VICTORY VISA
+        </Link>
         </span>
       </div>
 
@@ -76,8 +99,8 @@ const Navbar = () => {
         {/* Visa Services */}
         <li
           className="mx-4 relative group my-2 md:my-0"
-          onMouseEnter={() => window.innerWidth > 768 && setVisaDropdown(true)}
-          onMouseLeave={() => window.innerWidth > 768 && setVisaDropdown(false)}
+          onMouseEnter={handleMouseEnterVisa}
+          onMouseLeave={handleMouseLeaveVisa}
         >
           <span
             className="text-lg flex items-center gap-1 hover:text-white hover:bg-cyan-500 p-2 rounded cursor-pointer transition duration-300 whitespace-nowrap"
@@ -140,12 +163,8 @@ const Navbar = () => {
         {/* Immigration */}
         <li
           className="mx-4 relative group my-2 md:my-0"
-          onMouseEnter={() =>
-            window.innerWidth > 1000 && setImmigrationDropdown(true)
-          }
-          onMouseLeave={() =>
-            window.innerWidth > 768 && setImmigrationDropdown(false)
-          }
+          onMouseEnter={handleMouseEnterImmigration}
+          onMouseLeave={handleMouseLeaveImmigration}
         >
           <span
             className="text-lg flex items-center gap-1 hover:text-white hover:bg-cyan-500 p-2 rounded cursor-pointer transition duration-300 whitespace-nowrap"
@@ -164,7 +183,7 @@ const Navbar = () => {
                   className="block"
                   onClick={() => {
                     setImmigrationDropdown(false);
-                    setIsMenuOpen(false); // Close menu
+                    setIsMenuOpen(false);
                   }}
                 >
                   South Africa
@@ -176,7 +195,7 @@ const Navbar = () => {
                   className="block"
                   onClick={() => {
                     setImmigrationDropdown(false);
-                    setIsMenuOpen(false); // Close menu
+                    setIsMenuOpen(false);
                   }}
                 >
                   Australia
@@ -188,7 +207,7 @@ const Navbar = () => {
                   className="block"
                   onClick={() => {
                     setImmigrationDropdown(false);
-                    setIsMenuOpen(false); // Close menu
+                    setIsMenuOpen(false);
                   }}
                 >
                   New Zealand
@@ -200,7 +219,7 @@ const Navbar = () => {
                   className="block"
                   onClick={() => {
                     setImmigrationDropdown(false);
-                    setIsMenuOpen(false); // Close menu
+                    setIsMenuOpen(false);
                   }}
                 >
                   UK
@@ -212,7 +231,7 @@ const Navbar = () => {
                   className="block"
                   onClick={() => {
                     setImmigrationDropdown(false);
-                    setIsMenuOpen(false); // Close menu
+                    setIsMenuOpen(false);
                   }}
                 >
                   USA
@@ -224,7 +243,7 @@ const Navbar = () => {
                   className="block"
                   onClick={() => {
                     setImmigrationDropdown(false);
-                    setIsMenuOpen(false); // Close menu
+                    setIsMenuOpen(false);
                   }}
                 >
                   Canada
@@ -235,7 +254,7 @@ const Navbar = () => {
         </li>
 
         {/* Other Links */}
-        <li className="mx-4 my-2 md:my-0">
+        <li className="mx-4 my-2 md:my-0" onClick={() => setIsMenuOpen(false)}>
           <Link
             to="/flight-tickets"
             className="text-lg hover:text-white hover:bg-cyan-500 p-2 rounded transition duration-300"
@@ -243,7 +262,7 @@ const Navbar = () => {
             Flight Tickets
           </Link>
         </li>
-        <li className="mx-4 my-2 md:my-0">
+        <li className="mx-4 my-2 md:my-0" onClick={() => setIsMenuOpen(false)}>
           <Link
             to="/travel-insurance"
             className="text-lg hover:text-white hover:bg-cyan-500 p-2 rounded transition duration-300"
@@ -253,7 +272,7 @@ const Navbar = () => {
         </li>
 
         {/* Contact Us */}
-        <li className="mx-4 my-2 md:my-0">
+        <li className="mx-4 my-2 md:my-0" onClick={() => setIsMenuOpen(false)}>
           {location.pathname === "/" ? (
             <HashLink
               smooth

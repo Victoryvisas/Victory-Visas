@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import axios from "axios"; // For API calls
 import aboutImage from "../assets/aboutus.jpg"; // Replace with the correct path to the image
 
 const AboutUs = () => {
@@ -23,6 +24,42 @@ const AboutUs = () => {
     hidden: { opacity: 0, x: -50 },
     visible: { opacity: 1, x: 0, transition: { duration: 1 } },
   };
+
+  // State to store About Us data
+  const [aboutData, setAboutData] = useState({
+    aboutText: "",
+    services: [],
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchAboutData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/about");
+        if (response.data) {
+          setAboutData(response.data);
+        } else {
+          setError("Failed to fetch About Us content.");
+        }
+      } catch (err) {
+        console.error("Error fetching About Us content:", err);
+        setError("Failed to fetch About Us content.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAboutData();
+  }, []);
+
+  if (loading) {
+    return <p className="text-center text-white">Loading About Us content...</p>;
+  }
+
+  if (error) {
+    return <p className="text-center text-red-500">{error}</p>;
+  }
 
   return (
     <section id="about-us" className="py-16 bg-cyan-600">
@@ -60,42 +97,18 @@ const AboutUs = () => {
             className="text-lg text-black mb-6"
             variants={itemVariants}
           >
-            We are a leading visa services provider, offering tailored solutions
-            for immigration, study, and tourist visas.
+            {aboutData.aboutText}
           </motion.p>
 
-          {/* Our Best Services */}
-          <motion.div className="mb-6" variants={itemVariants}>
-            <h3 className="text-2xl font-semibold text-white mb-2">
-              Our Best Services
-            </h3>
-            <p className="text-black text-lg">
-              We provide expert advice and fast processing for all types of
-              visas, ensuring a smooth experience for our clients.
-            </p>
-          </motion.div>
-
-          {/* Customer Receiving */}
-          <motion.div className="mb-6" variants={itemVariants}>
-            <h3 className="text-2xl font-semibold text-white mb-2">
-              Customer Receiving
-            </h3>
-            <p className="text-black text-lg">
-              We pride ourselves on exceptional customer service, providing
-              assistance and support at every step of your visa application.
-            </p>
-          </motion.div>
-
-          {/* Low Pricing & Best Quality */}
-          <motion.div className="mb-6" variants={itemVariants}>
-            <h3 className="text-2xl font-semibold text-white mb-2">
-              Low Pricing & Best Quality
-            </h3>
-            <p className="text-black text-lg">
-              Our services are affordably priced without compromising on
-              quality, offering the best value for our clients.
-            </p>
-          </motion.div>
+          {/* Render Services */}
+          {aboutData.services.map((service, index) => (
+            <motion.div className="mb-6" key={index} variants={itemVariants}>
+              <h3 className="text-2xl font-semibold text-white mb-2">
+                {service.title}
+              </h3>
+              <p className="text-black text-lg">{service.description}</p>
+            </motion.div>
+          ))}
         </motion.div>
       </motion.div>
     </section>

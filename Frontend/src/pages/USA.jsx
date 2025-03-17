@@ -1,27 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import usaImage from "../assets/usa.png";
+import CountryVisaForm from "../Components/CountryVisaForm";
 
 const USA = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    visaType: "",
-    message: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted: ", formData);
-    // Add form submission logic here
-  };
-
   // Animation Variants
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
@@ -172,94 +154,7 @@ const USA = () => {
         </motion.section>
 
         {/* Form Section */}
-        <motion.section
-          initial="hidden"
-          animate="visible"
-          variants={fadeIn}
-          className="mt-12 bg-white p-6 md:p-12 rounded-xl shadow-lg"
-        >
-          <h2 className="text-2xl font-bold text-blue-900 text-center">
-            Contact Us
-          </h2>
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            {/* Input fields */}
-            {["name", "email", "phone"].map((field) => (
-              <div key={field}>
-                <label
-                  htmlFor={field}
-                  className="block text-lg font-semibold text-gray-700"
-                >
-                  {field.charAt(0).toUpperCase() + field.slice(1)}
-                </label>
-                <input
-                  type={field === "email" ? "email" : "text"}
-                  id={field}
-                  name={field}
-                  value={formData[field]}
-                  onChange={handleChange}
-                  className="w-full mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  required
-                />
-              </div>
-            ))}
-
-            {/* Visa Type */}
-            <div>
-              <label
-                htmlFor="visaType"
-                className="block text-lg font-semibold text-gray-700"
-              >
-                Type of Visa
-              </label>
-              <select
-                id="visaType"
-                name="visaType"
-                value={formData.visaType}
-                onChange={handleChange}
-                className="w-full mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                required
-              >
-                <option value="">Select Visa Type</option>
-                <option value="Tourist Visa">Tourist Visa</option>
-                <option value="Business Visa">Business Visa</option>
-                <option value="Student Visa">Student Visa</option>
-                <option value="Work Visa">Work Visa</option>
-                <option value="Exchange Visitor Visa">
-                  Exchange Visitor Visa
-                </option>
-              </select>
-            </div>
-
-            {/* Message */}
-            <div>
-              <label
-                htmlFor="message"
-                className="block text-lg font-semibold text-gray-700"
-              >
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                className="w-full mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                rows="4"
-              />
-            </div>
-
-            <div className="text-center">
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                type="submit"
-                className="px-6 py-3 bg-blue-900 text-white rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-              >
-                Submit
-              </motion.button>
-            </div>
-          </form>
-        </motion.section>
+        <CountryVisaForm />
       </main>
     </div>
   );

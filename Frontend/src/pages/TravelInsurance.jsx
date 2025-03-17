@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import travel_insurance_photo from "../assets/australia.png";
+import travel_insurance_photo from "../assets/travelInsurance.png";
 
 const TravelInsurance = () => {
   const [formData, setFormData] = useState({

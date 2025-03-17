@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion"; // Import Framer Motion
 import TouristVisaPhoto from "../assets/Tourist.jpg";
+import ServiceVisaForm from "../Components/ServiceVisaForm"; 
 
 const TouristVisaServices = () => {
   return (
@@ -66,53 +67,7 @@ const TouristVisaServices = () => {
           </motion.div>
 
           {/* Form Section */}
-          <motion.div
-            className="flex-1 flex flex-col space-y-4"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-          >
-            <h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800 text-center md:text-left">
-              Contact Us for Tourist Visa Assistance
-            </h2>
-            <form className="flex flex-col space-y-4 h-full">
-              <input
-                type="text"
-                placeholder="Name"
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <input
-                type="tel"
-                placeholder="Phone"
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <select
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select Visa Type</option>
-                <option value="business">Business Visa</option>
-                <option value="study">Study Visa</option>
-                <option value="tourist">Tourist Visa</option>
-                <option value="immigration">Immigration Visa</option>
-              </select>
-              <textarea
-                placeholder="Message"
-                rows="4"
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              ></textarea>
-              <button
-                type="submit"
-                className="p-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                Submit
-              </button>
-            </form>
-          </motion.div>
+          <ServiceVisaForm />
         </motion.div>
 
         {/* Content Section */}

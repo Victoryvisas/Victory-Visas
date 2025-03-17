@@ -1,44 +1,34 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import canadaImage from "../assets/canada.png";
+import CountryVisaForm from "../Components/CountryVisaForm";
 
 const Canada = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    visaType: "",
-    message: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleFormSubmit = (formData) => {
     console.log("Form submitted: ", formData);
-    // Add form submission logic here
-  };
 
-  // Animation Variants
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  };
-
-  const fadeIn = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.6 } },
-  };
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2 },
-    },
+    // Form submission logic
+    fetch("/api/submit-canada-visa", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Success:", data);
+        alert("Form submitted successfully!");
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+        alert("Form submission failed. Please try again.");
+      });
   };
 
   return (
@@ -48,7 +38,10 @@ const Canada = () => {
         className="bg-red-600 text-white text-center py-6"
         initial="hidden"
         animate="visible"
-        variants={fadeInUp}
+        variants={{
+          hidden: { opacity: 0, y: 50 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+        }}
       >
         <h1 className="text-3xl md:text-5xl font-bold">Explore Canada</h1>
         <p className="text-lg md:text-xl mt-2">
@@ -61,12 +54,21 @@ const Canada = () => {
         className="p-6 md:p-12"
         initial="hidden"
         animate="visible"
-        variants={staggerContainer}
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.2 },
+          },
+        }}
       >
         {/* Description Section */}
         <motion.section
           className="text-gray-800"
-          variants={fadeInUp}
+          variants={{
+            hidden: { opacity: 0, y: 50 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+          }}
         >
           <p className="text-lg md:text-xl">
             Canada is a vast and diverse country, known for its breathtaking
@@ -81,7 +83,7 @@ const Canada = () => {
         {/* Image Section */}
         <motion.section
           className="mt-8"
-          variants={fadeIn}
+          variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}
         >
           <motion.img
             src={canadaImage}
@@ -94,18 +96,32 @@ const Canada = () => {
         {/* Visa Information Section */}
         <motion.section
           className="mt-12 text-gray-800"
-          variants={fadeInUp}
+          variants={{
+            hidden: { opacity: 0, y: 50 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+          }}
         >
           <h2 className="text-2xl font-bold text-red-600">
             Canada Visas: Your Gateway to the Great White North
           </h2>
+          <p className="mt-4 text-lg">
+            To visit or stay in Canada, you’ll need the appropriate visa depending on your travel purpose. Common visa types include:
+          </p>
           <ul className="list-disc list-inside mt-4 text-lg">
-            <motion.li variants={fadeIn}>Tourist Visa: For visitors exploring Canada.</motion.li>
-            <motion.li variants={fadeIn}>Study Permit: For international students.</motion.li>
-            <motion.li variants={fadeIn}>Work Permit: For individuals seeking employment.</motion.li>
-            <motion.li variants={fadeIn}>Visitor Visa: For short-term visits.</motion.li>
-            <motion.li variants={fadeIn}>
-              Permanent Residency Visas: For those wishing to move to Canada permanently.
+            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
+              Tourist Visa: For visitors exploring Canada for leisure, tourism, or to visit family and friends.
+            </motion.li>
+            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
+              Study Permit: For international students planning to study at a Canadian institution.
+            </motion.li>
+            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
+              Work Permit: For individuals seeking employment in Canada or working temporarily.
+            </motion.li>
+            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
+              Visitor Visa: For short-term visits to Canada for business, tourism, or family reasons.
+            </motion.li>
+            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
+              Permanent Residency Visas: For those wishing to move to Canada permanently through immigration programs like Express Entry, family sponsorship, or provincial nominee programs.
             </motion.li>
           </ul>
         </motion.section>
@@ -113,13 +129,16 @@ const Canada = () => {
         {/* Call to Action */}
         <motion.section
           className="mt-12 text-center"
-          variants={fadeInUp}
+          variants={{
+            hidden: { opacity: 0, y: 50 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+          }}
         >
           <h2 className="text-2xl font-bold text-red-600">
             Ready to Discover Canada?
           </h2>
           <p className="mt-4 text-lg text-gray-800">
-            Let Victory Visas take care of your visa application so you can focus on enjoying Canada.
+            Let Victory Visas take care of your visa application so you can focus on enjoying your Canadian experience.
           </p>
           <motion.button
             className="mt-6 px-6 py-3 bg-red-600 text-white rounded-lg shadow-lg hover:bg-red-500"
@@ -130,106 +149,41 @@ const Canada = () => {
           </motion.button>
         </motion.section>
 
-        {/* Form Section */}
+        {/* Victory Visas Assistance Section */}
         <motion.section
-          className="mt-12 bg-white p-6 md:p-12 rounded-xl shadow-lg"
-          variants={fadeInUp}
+          className="mt-12 text-gray-800"
+          variants={{
+            hidden: { opacity: 0, y: 50 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+          }}
         >
-          <h2 className="text-2xl font-bold text-red-600 text-center">
-            Get in Touch
+          <h2 className="text-2xl font-bold text-red-600">
+            How Victory Visas Helps You Obtain Your Canada Visa
           </h2>
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            <motion.div variants={fadeInUp}>
-              <label
-                htmlFor="name"
-                className="block text-lg font-semibold text-gray-700"
-              >
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-red-400"
-                required
-              />
-            </motion.div>
-            <motion.div variants={fadeInUp}>
-              <label htmlFor="email" className="block text-lg font-semibold">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-red-400"
-                required
-              />
-            </motion.div>
-            <motion.div variants={fadeInUp}>
-              <label htmlFor="phone" className="block text-lg font-semibold">
-                Phone
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-red-400"
-                required
-              />
-            </motion.div>
-            <motion.div variants={fadeInUp}>
-              <label htmlFor="visaType" className="block text-lg font-semibold">
-                Visa Type
-              </label>
-              <select
-                id="visaType"
-                name="visaType"
-                value={formData.visaType}
-                onChange={handleChange}
-                className="w-full mt-2 p-3 border rounded-lg"
-                required
-              >
-                <option value="">Select Visa Type</option>
-                <option value="Tourist Visa">Tourist Visa</option>
-                <option value="Study Permit">Study Permit</option>
-                <option value="Work Permit">Work Permit</option>
-                <option value="Visitor Visa">Visitor Visa</option>
-                <option value="Permanent Residency Visa">PR Visa</option>
-              </select>
-            </motion.div>
-            <motion.div variants={fadeInUp}>
-              <label htmlFor="message" className="block text-lg font-semibold">
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                className="w-full mt-2 p-3 border rounded-lg"
-                rows="4"
-              />
-            </motion.div>
-            <motion.div
-              className="text-center"
-              variants={fadeIn}
-            >
-              <button
-                type="submit"
-                className="px-6 py-3 bg-red-600 text-white rounded-lg shadow-lg"
-              >
-                Submit
-              </button>
-            </motion.div>
-          </form>
+          <p className="mt-4 text-lg">
+            The visa application process for Canada can be complicated, but Victory Visas simplifies it for you. Our experienced team helps ensure you have the right documentation and meet the necessary requirements to get your visa quickly and easily.
+          </p>
+          <ul className="list-disc list-inside mt-4 text-lg">
+            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
+              Visa Consultation: We’ll help you choose the right visa for your travel, work, or study needs.
+            </motion.li>
+            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
+              Document Assistance: We provide guidance on gathering and preparing the necessary paperwork for your application.
+            </motion.li>
+            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
+              Application Submission: Victory Visas ensures that your application is submitted accurately and on time to avoid any delays.
+            </motion.li>
+            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
+              Continuous Support: We keep you updated throughout the process, answering any questions you may have along the way.
+            </motion.li>
+          </ul>
+          <p className="mt-4 text-lg">
+            Whether you're planning a short visit or looking to start a new life in Canada, Victory Visas ensures your visa application process is smooth and hassle-free.
+          </p>
         </motion.section>
+
+        {/* Form Section */}
+        <CountryVisaForm onSubmit={handleFormSubmit} />
       </motion.main>
     </div>
   );
