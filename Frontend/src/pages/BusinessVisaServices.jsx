@@ -1,86 +1,70 @@
 import React from "react";
+import { motion } from "framer-motion";
 import BusinessVisaPhoto from "../assets/business-visa-photo.png";
+import ServiceVisaForm from '../Components/ServiceVisaForm'// Import the new component
 
 const BusinessVisaServices = () => {
   return (
     <div>
       {/* Banner Section */}
       <div className="relative w-full">
-        <img
-          src={BusinessVisaPhoto} // Use the appropriate image file for the banner
+        <motion.img
+          src={BusinessVisaPhoto}
           alt="Business Visa Services"
           className="w-full h-[400px] object-cover rounded-b-2xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 text-white text-center">
+        <motion.div
+          className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 text-white text-center"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.3 }}
+        >
           <h2 className="text-xl sm:text-2xl font-semibold">
             Explore Global Business Opportunities
           </h2>
           <h1 className="text-2xl sm:text-4xl font-bold mt-2">
             Your Reliable Partner for Business Visa Services
           </h1>
-        </div>
+        </motion.div>
       </div>
 
       {/* Main Content Section */}
       <div className="flex flex-col items-center p-6 bg-gray-100 sm:p-8">
         {/* Photo and Form Section */}
-        <div className="flex flex-col sm:flex-row w-full max-w-5xl bg-white rounded-2xl shadow-lg p-6 sm:p-8 mt-8">
+        <motion.div
+          className="flex flex-col sm:flex-row w-full max-w-5xl bg-white rounded-2xl shadow-lg p-6 sm:p-8 mt-8"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+        >
           {/* Image Section */}
-          <div className="flex-1 flex items-center justify-center mb-6 sm:mb-0 sm:mr-6">
+          <motion.div
+            className="flex-1 flex items-center justify-center mb-6 sm:mb-0 sm:mr-6"
+            initial={{ x: -50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+          >
             <img
               src={BusinessVisaPhoto}
               alt="Business Visa Services"
               className="rounded-2xl shadow-lg w-full h-auto sm:h-full object-cover"
             />
-          </div>
+          </motion.div>
 
           {/* Form Section */}
-          <div className="flex-1 flex flex-col space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800 sm:text-xl text-center sm:text-left">
-              Contact Us for Business Visa Assistance
-            </h2>
-            <form className="flex flex-col space-y-4 h-full">
-              <input
-                type="text"
-                placeholder="Name"
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <input
-                type="tel"
-                placeholder="Phone"
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <select
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select Visa Type</option>
-                <option value="business">Business Visa</option>
-                <option value="study">Study Visa</option>
-                <option value="tourist">Tourist Visa</option>
-                <option value="immigration">Immigration Visa</option>
-              </select>
-              <textarea
-                placeholder="Message"
-                rows="4"
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              ></textarea>
-              <button
-                type="submit"
-                className="p-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                Submit
-              </button>
-            </form>
-          </div>
-        </div>
+          <ServiceVisaForm />
+        </motion.div>
 
         {/* Content Section */}
-        <div className="w-full max-w-5xl bg-white rounded-2xl shadow-lg p-6 sm:p-8 mt-8">
+        <motion.div
+          className="w-full max-w-5xl bg-white rounded-2xl shadow-lg p-6 sm:p-8 mt-8"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+        >
           <p className="text-gray-600 mb-6">
             At Victory Visas, we specialize in offering expert immigration and visa consultancy
             services for businesses and entrepreneurs seeking to travel abroad for professional
@@ -117,7 +101,7 @@ const BusinessVisaServices = () => {
             <li>Comprehensive Support</li>
             <li>Proven Track Record</li>
           </ul>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
