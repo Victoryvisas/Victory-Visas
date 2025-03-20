@@ -51,7 +51,7 @@ function App() {
         <Route path="/admin-login" element={<Login />} />
 
       </Routes>
-      <Footer />
+      
     </Router>
   );
 }

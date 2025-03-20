@@ -105,12 +105,11 @@ const HeroSection = () => {
           </p>
         </motion.div>
 
-        {/* Requirements Section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="flex flex-col md:flex-row items-center justify-center gap-4 w-full max-w-4xl"
+          className="flex flex-col md:flex-row  items-center justify-center gap-4 w-full max-w-4xl"
           style={{ alignItems: "flex-end" }}
         >
           {/* Nationality Dropdown */}
@@ -151,15 +150,17 @@ const HeroSection = () => {
           </motion.div>
 
           {/* Search Button */}
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setIsFormVisible(true)}
-            className="bg-blue-600 text-white px-4 py-3 rounded hover:bg-blue-700 sm:w-auto md:w-auto"
-          >
-            Search
-          </motion.button>
-        </motion.div>
+          
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setIsFormVisible(true)}
+              className="bg-blue-600 text-white px-4 py-3 rounded hover:bg-blue-700 sm:w-auto md:w-auto"
+            >
+              Search
+            </motion.button>
+          </motion.div>
+        
       </div>
 
       {/* WhatsApp Integration */}
@@ -167,7 +168,7 @@ const HeroSection = () => {
         href="https://wa.me/919818718419" // Replace with your WhatsApp number
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-0 left-4 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition transform hover:scale-110"
+        className="fixed bottom-0 right-4 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition transform hover:scale-110"
       >
         <FaWhatsapp size={28} />
       </a>
