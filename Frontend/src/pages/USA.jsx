@@ -6,157 +6,181 @@ import CountryVisaForm from "../Components/CountryVisaForm";
 const USA = () => {
   // Animation Variants
   const fadeIn = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
   };
 
-  const imageVariant = {
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
+  };
+
+  const staggerItem = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  };
+
+  const scaleIn = {
     hidden: { opacity: 0, scale: 0.9 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 1 } },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "easeOut" } },
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      className="bg-gradient-to-b from-blue-50 to-blue-100 min-h-screen"
+      aria-label="USA Visa Information"
+    >
       {/* Header Section */}
       <motion.header
-        initial="hidden"
-        animate="visible"
         variants={fadeIn}
-        className="bg-blue-900 text-white text-center py-6"
+        className="bg-blue-900 text-white text-center py-8 px-6 shadow-lg"
       >
-        <h1 className="text-3xl md:text-5xl font-bold">Explore the USA</h1>
-        <p className="text-lg md:text-xl mt-2">
+        <h1 className="text-4xl md:text-6xl font-extrabold">Discover the USA</h1>
+        <p className="text-lg md:text-2xl mt-3 font-light tracking-wide">
           The Land of Endless Opportunities
         </p>
       </motion.header>
 
       {/* Main Content Section */}
-      <main className="p-6 md:p-12">
+      <motion.main
+        variants={staggerContainer}
+        className="p-8 md:p-16 max-w-7xl mx-auto"
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Content and Image Section */}
         <motion.section
-          initial="hidden"
-          animate="visible"
           variants={fadeIn}
-          className="text-gray-800"
+          className="mt-12 flex flex-col md:flex-row md:items-center gap-12"
         >
-          <p className="text-lg md:text-xl">
-            The United States is a land of incredible diversity, offering
-            something for everyone. From the vibrant streets of New York to the
-            breathtaking national parks like Yellowstone and the Grand Canyon,
-            the USA is a top destination for travelers, students, and
-            professionals alike. Discover endless opportunities and iconic
-            experiences in this dynamic country.
-          </p>
+          {/* Text Content */}
+          <div className="flex-1 text-gray-700 leading-relaxed space-y-4">
+            <p className="text-lg md:text-xl">
+              The United States is a land of incredible diversity, offering
+              something for everyone. From vibrant cities to breathtaking
+              national parks, it’s a top destination for travelers, students,
+              and professionals alike.
+            </p>
+            <p className="text-lg md:text-xl">
+              Whether you’re visiting for leisure, business, or education, the
+              USA offers countless opportunities and experiences.
+            </p>
+          </div>
+
+          {/* Image with Scale Animation */}
+          <motion.div
+            variants={scaleIn}
+            className="flex-shrink-0 shadow-2xl rounded-xl overflow-hidden"
+            whileHover={{ scale: 1.05 }} // Add hover effect
+          >
+            <img
+              src={usaImage}
+              alt="A scenic view of the USA"
+              className="w-[500px] h-[300px] object-cover"
+              loading="lazy"
+            />
+          </motion.div>
         </motion.section>
 
-        {/* Image Section */}
-        <motion.section
-          initial="hidden"
-          animate="visible"
-          variants={imageVariant}
-          className="mt-8"
-        >
-          <img
-            src={usaImage}
-            alt="USA"
-            className="w-full h-[300px] md:h-[400px] object-cover rounded-b-2xl"
-          />
-        </motion.section>
+        {/* Visa Information and Victory Visas Sections */}
+        <div className="flex flex-col md:flex-row gap-6 md:gap-12 px-8 md:px-16 py-16">
+          {/* Visa Information Section */}
+          <motion.section
+            variants={fadeIn}
+            className="flex-1 bg-gradient-to-r from-white to-gray-50 rounded-lg shadow-lg p-8"
+            aria-labelledby="visa-info-title"
+          >
+            <h2
+              id="visa-info-title"
+              className="text-3xl font-extrabold text-blue-900 mb-4"
+            >
+              USA Visas: Your Path to the American Dream
+            </h2>
+            <motion.ul
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className="list-disc list-inside text-lg space-y-3 text-gray-700"
+            >
+              {[
+                "Tourist Visa (B-2): For leisure travel and visiting family or friends.",
+                "Business Visa (B-1): For business meetings, conferences, and professional activities.",
+                "Student Visa (F-1): For attending academic programs in the USA.",
+                "Work Visa (H-1B, L-1): For employment opportunities.",
+                "Exchange Visitor Visa (J-1): For cultural exchange programs.",
+              ].map((item, index) => (
+                <motion.li key={index} variants={staggerItem}>
+                  <span className="font-bold">{item.split(":")[0]}:</span>{" "}
+                  {item.split(":")[1]}
+                </motion.li>
+              ))}
+            </motion.ul>
+          </motion.section>
 
-        {/* Visa Information Section */}
-        <motion.section
-          initial="hidden"
-          animate="visible"
-          variants={fadeIn}
-          className="mt-12 text-gray-800"
-        >
-          <h2 className="text-2xl font-bold text-blue-900">
-            USA Visas: Your Path to the American Dream
-          </h2>
-          <ul className="list-disc list-inside mt-4 text-lg">
-            <li>
-              <span className="font-bold">Tourist Visa (B-2):</span> For leisure
-              travel and visiting family or friends.
-            </li>
-            <li>
-              <span className="font-bold">Business Visa (B-1):</span> For
-              business meetings, conferences, and other professional activities.
-            </li>
-            <li>
-              <span className="font-bold">Student Visa (F-1):</span> For
-              international students attending academic programs in the USA.
-            </li>
-            <li>
-              <span className="font-bold">Work Visa (H-1B, L-1):</span> For
-              employment or specialized job opportunities in the USA.
-            </li>
-            <li>
-              <span className="font-bold">Exchange Visitor Visa (J-1):</span>{" "}
-              For cultural exchange programs, internships, or research.
-            </li>
-          </ul>
-          <p className="mt-4 text-lg">
-            Each visa type has specific eligibility requirements and processing
-            times. The application process can be detailed and complex.
-          </p>
-        </motion.section>
-
-        {/* How Victory Visas Helps Section */}
-        <motion.section
-          initial="hidden"
-          animate="visible"
-          variants={fadeIn}
-          className="mt-12"
-        >
-          <h2 className="text-2xl font-bold text-blue-900">
-            How Victory Visas Helps You Secure Your USA Visa
-          </h2>
-          <ul className="mt-4 text-lg text-gray-800">
-            <li className="mt-2">
-              <span className="font-bold">Expert Guidance:</span> We help you
-              select the right visa for your travel needs.
-            </li>
-            <li className="mt-2">
-              <span className="font-bold">Document Preparation:</span> Our team
-              ensures all your documents are complete and accurate.
-            </li>
-            <li className="mt-2">
-              <span className="font-bold">Hassle-Free Submission:</span> We
-              handle the application process to minimize delays and errors.
-            </li>
-            <li className="mt-2">
-              <span className="font-bold">Ongoing Support:</span> Victory Visas
-              keeps you updated throughout the visa process.
-            </li>
-          </ul>
-        </motion.section>
+          {/* How Victory Visas Helps Section */}
+          <motion.section
+            variants={fadeIn}
+            className="flex-1 bg-gradient-to-r from-white to-gray-50 rounded-lg shadow-lg p-8"
+            aria-labelledby="victory-visas-title"
+          >
+            <h2
+              id="victory-visas-title"
+              className="text-3xl font-extrabold text-blue-900 mb-4"
+            >
+              How Victory Visas Helps You Secure Your USA Visa
+            </h2>
+            <motion.ul
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className="text-lg text-gray-700 space-y-4 leading-relaxed"
+            >
+              {[
+                "Visa Consultation: Expert advice for selecting the right visa.",
+                "Document Preparation: Ensuring all your documents are complete.",
+                "Application Submission: Smooth handling of the process to minimize delays.",
+                "Ongoing Support: Keeping you informed at every step.",
+              ].map((item, index) => (
+                <motion.li key={index} variants={staggerItem}>
+                  <span className="font-bold">{item.split(":")[0]}:</span>{" "}
+                  {item.split(":")[1]}
+                </motion.li>
+              ))}
+            </motion.ul>
+          </motion.section>
+        </div>
 
         {/* Call to Action Section */}
         <motion.section
-          initial="hidden"
-          animate="visible"
           variants={fadeIn}
-          className="mt-12 text-center"
+          className="mt-16 text-center bg-gray-50 rounded-lg shadow-lg p-8"
+          whileHover={{ scale: 1.02 }} // Add hover effect
         >
-          <h2 className="text-2xl font-bold text-blue-900">
-            Plan Your USA Journey Today
+          <h2 className="text-3xl font-extrabold text-blue-900">
+            Start Your USA Adventure Today
           </h2>
-          <p className="mt-4 text-lg text-gray-800">
-            Let Victory Visas simplify your visa process, so you can focus on
-            your travel plans. Start your American adventure with confidence!
+          <p className="mt-4 text-lg text-gray-700">
+            Let Victory Visas take the hassle out of your visa application.
+            Begin your journey with confidence!
           </p>
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="mt-6 px-6 py-3 bg-blue-900 text-white rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-          >
-            Apply Now
-          </motion.button>
         </motion.section>
 
         {/* Form Section */}
-        <CountryVisaForm />
-      </main>
-    </div>
+        <motion.section
+          variants={fadeIn}
+          className="mt-16 bg-transparent"
+          aria-labelledby="visa-form-title"
+        >
+          <h2 id="visa-form-title" className="sr-only">
+            Visa Application Form
+          </h2>
+          <CountryVisaForm />
+        </motion.section>
+      </motion.main>
+    </motion.div>
   );
 };
 

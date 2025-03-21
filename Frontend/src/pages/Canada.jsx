@@ -4,188 +4,208 @@ import canadaImage from "../assets/canada.png";
 import CountryVisaForm from "../Components/CountryVisaForm";
 
 const Canada = () => {
-  const handleFormSubmit = (formData) => {
-    console.log("Form submitted: ", formData);
-
-    // Form submission logic
-    fetch("/api/submit-canada-visa", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Success:", data);
-        alert("Form submitted successfully!");
-      })
-      .catch((error) => {
-        console.error("There was a problem with the fetch operation:", error);
-        alert("Form submission failed. Please try again.");
-      });
+  // Fade-in animation with slight upward motion
+  const fadeIn = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
   };
 
+  // Staggered container animation
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  // Staggered list item animation
+  const staggerItem = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  // Scale animation for images
+  const scaleIn = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
+  
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      className="bg-gradient-to-b from-blue-50 to-blue-100 min-h-screen"
+      aria-label="Canada Visa Information"
+    >
       {/* Header Section */}
       <motion.header
-        className="bg-red-600 text-white text-center py-6"
-        initial="hidden"
-        animate="visible"
-        variants={{
-          hidden: { opacity: 0, y: 50 },
-          visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-        }}
+        variants={fadeIn}
+        className="bg-blue-900 text-white text-center py-8 px-6 shadow-lg"
       >
-        <h1 className="text-3xl md:text-5xl font-bold">Explore Canada</h1>
-        <p className="text-lg md:text-xl mt-2">
+        <h1 className="text-4xl md:text-6xl font-extrabold">Explore Canada</h1>
+        <p className="text-lg md:text-2xl mt-3 font-light tracking-wide">
           A Country of Natural Beauty and Opportunities
         </p>
       </motion.header>
 
       {/* Main Content Section */}
       <motion.main
-        className="p-6 md:p-12"
+        variants={staggerContainer}
+        className="p-8 md:p-16 max-w-7xl mx-auto"
         initial="hidden"
         animate="visible"
-        variants={{
-          hidden: { opacity: 0 },
-          visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.2 },
-          },
-        }}
       >
-        {/* Description Section */}
+        {/* Content and Image Section */}
         <motion.section
-          className="text-gray-800"
-          variants={{
-            hidden: { opacity: 0, y: 50 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-          }}
+          variants={fadeIn}
+          className="mt-12 flex flex-col md:flex-row md:items-center gap-12"
         >
-          <p className="text-lg md:text-xl">
-            Canada is a vast and diverse country, known for its breathtaking
-            landscapes, multicultural cities, and welcoming people. From the
-            towering Rocky Mountains to the cosmopolitan streets of Toronto and
-            Vancouver, Canada offers endless possibilities for tourists,
-            students, and professionals alike. Whether you're planning to visit,
-            study, work, or immigrate, Canada has something for everyone.
-          </p>
-        </motion.section>
+          {/* Text Content */}
+          <div className="flex-1 text-gray-700 leading-relaxed space-y-4">
+            <p className="text-lg md:text-xl">
+              Canada is a vast and diverse country, known for its breathtaking
+              landscapes, multicultural cities, and welcoming people. From the
+              towering Rocky Mountains to the cosmopolitan streets of Toronto and
+              Vancouver, Canada offers endless possibilities for tourists,
+              students, and professionals alike.
+            </p>
+            <p className="text-lg md:text-xl">
+              Whether you're planning to visit, study, work, or immigrate,
+              Canada has something for everyone.
+            </p>
+          </div>
 
-        {/* Image Section */}
-        <motion.section
-          className="mt-8"
-          variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}
-        >
-          <motion.img
-            src={canadaImage}
-            alt="Canada"
-            className="rounded-xl shadow-lg w-full h-auto object-cover"
-            whileHover={{ scale: 1.05 }}
-          />
-        </motion.section>
-
-        {/* Visa Information Section */}
-        <motion.section
-          className="mt-12 text-gray-800"
-          variants={{
-            hidden: { opacity: 0, y: 50 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-          }}
-        >
-          <h2 className="text-2xl font-bold text-red-600">
-            Canada Visas: Your Gateway to the Great White North
-          </h2>
-          <p className="mt-4 text-lg">
-            To visit or stay in Canada, you’ll need the appropriate visa depending on your travel purpose. Common visa types include:
-          </p>
-          <ul className="list-disc list-inside mt-4 text-lg">
-            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
-              Tourist Visa: For visitors exploring Canada for leisure, tourism, or to visit family and friends.
-            </motion.li>
-            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
-              Study Permit: For international students planning to study at a Canadian institution.
-            </motion.li>
-            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
-              Work Permit: For individuals seeking employment in Canada or working temporarily.
-            </motion.li>
-            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
-              Visitor Visa: For short-term visits to Canada for business, tourism, or family reasons.
-            </motion.li>
-            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
-              Permanent Residency Visas: For those wishing to move to Canada permanently through immigration programs like Express Entry, family sponsorship, or provincial nominee programs.
-            </motion.li>
-          </ul>
-        </motion.section>
-
-        {/* Call to Action */}
-        <motion.section
-          className="mt-12 text-center"
-          variants={{
-            hidden: { opacity: 0, y: 50 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-          }}
-        >
-          <h2 className="text-2xl font-bold text-red-600">
-            Ready to Discover Canada?
-          </h2>
-          <p className="mt-4 text-lg text-gray-800">
-            Let Victory Visas take care of your visa application so you can focus on enjoying your Canadian experience.
-          </p>
-          <motion.button
-            className="mt-6 px-6 py-3 bg-red-600 text-white rounded-lg shadow-lg hover:bg-red-500"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+          {/* Image with Scale Animation */}
+          <motion.div
+            variants={scaleIn}
+            className="flex-shrink-0 shadow-2xl rounded-xl overflow-hidden"
+            whileHover={{ scale: 1.05 }} // Add hover effect
           >
-            Apply Now
-          </motion.button>
+            <img
+              src={canadaImage}
+              alt="A scenic view of Canada"
+              className="w-[500px] h-[300px] object-cover"
+              loading="lazy"
+            />
+          </motion.div>
         </motion.section>
 
-        {/* Victory Visas Assistance Section */}
+        {/* Visa Information and Victory Visas Sections */}
+        <div className="flex flex-col md:flex-row gap-6 md:gap-12 px-8 md:px-16 py-16">
+          {/* Visa Information Section */}
+          <motion.section
+            variants={fadeIn}
+            className="flex-1 bg-gradient-to-r from-white to-blue-50 rounded-lg shadow-lg p-8"
+            aria-labelledby="visa-info-title"
+          >
+            <h2
+              id="visa-info-title"
+              className="text-3xl font-extrabold text-blue-900 mb-4"
+            >
+              Canada Visas: Everything You Need to Know
+            </h2>
+            <motion.ul
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className="list-disc list-inside text-lg space-y-3 text-gray-700"
+            >
+              {[
+                "Tourist Visa: For visitors exploring Canada for leisure, tourism, or to visit family and friends.",
+                "Study Permit: For international students planning to study at a Canadian institution.",
+                "Work Permit: For individuals seeking employment in Canada or working temporarily.",
+                "Visitor Visa: For short-term visits to Canada for business, tourism, or family reasons.",
+                "Permanent Residency Visas: For those wishing to move to Canada permanently through immigration programs like Express Entry, family sponsorship, or provincial nominee programs.",
+              ].map((item, index) => (
+                <motion.li key={index} variants={staggerItem}>
+                  <span className="font-bold">{item.split(":")[0]}:</span>{" "}
+                  {item.split(":")[1]}
+                </motion.li>
+              ))}
+            </motion.ul>
+          </motion.section>
+
+          {/* How Victory Visas Helps Section */}
+          <motion.section
+            variants={fadeIn}
+            className="flex-1 bg-gradient-to-r from-white to-red-50 rounded-lg shadow-lg p-8"
+            aria-labelledby="victory-visas-title"
+          >
+            <h2
+              id="victory-visas-title"
+              className="text-3xl font-extrabold text-blue-900 mb-4"
+            >
+              How Victory Visas Helps You Obtain Your Canada Visa
+            </h2>
+            <motion.ul
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className="text-lg text-gray-700 space-y-4 leading-relaxed"
+            >
+              {[
+                "Visa Consultation: We help determine which visa type is right for your specific purpose of travel.",
+                "Document Preparation: We assist with gathering and preparing the required documentation to meet the Canadian embassy's criteria.",
+                "Application Submission: Victory Visas ensures that your application is submitted smoothly, avoiding common mistakes that can lead to delays.",
+                "Visa Updates: We keep you informed throughout the process, providing timely updates and addressing any concerns.",
+              ].map((item, index) => (
+                <motion.li key={index} variants={staggerItem}>
+                  <span className="font-bold">{item.split(":")[0]}:</span>{" "}
+                  {item.split(":")[1]}
+                </motion.li>
+              ))}
+            </motion.ul>
+          </motion.section>
+        </div>
+
+        {/* Call to Action Section */}
         <motion.section
-          className="mt-12 text-gray-800"
-          variants={{
-            hidden: { opacity: 0, y: 50 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-          }}
+          variants={fadeIn}
+          className="mt-16 text-center bg-gray-50 rounded-lg shadow-lg p-8"
+          whileHover={{ scale: 1.02 }} // Add hover effect
         >
-          <h2 className="text-2xl font-bold text-red-600">
-            How Victory Visas Helps You Obtain Your Canada Visa
+          <h2 className="text-3xl font-extrabold text-blue-900 mb-4">
+            Ready to Explore Canada?
           </h2>
-          <p className="mt-4 text-lg">
-            The visa application process for Canada can be complicated, but Victory Visas simplifies it for you. Our experienced team helps ensure you have the right documentation and meet the necessary requirements to get your visa quickly and easily.
-          </p>
-          <ul className="list-disc list-inside mt-4 text-lg">
-            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
-              Visa Consultation: We’ll help you choose the right visa for your travel, work, or study needs.
-            </motion.li>
-            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
-              Document Assistance: We provide guidance on gathering and preparing the necessary paperwork for your application.
-            </motion.li>
-            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
-              Application Submission: Victory Visas ensures that your application is submitted accurately and on time to avoid any delays.
-            </motion.li>
-            <motion.li variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}>
-              Continuous Support: We keep you updated throughout the process, answering any questions you may have along the way.
-            </motion.li>
-          </ul>
-          <p className="mt-4 text-lg">
-            Whether you're planning a short visit or looking to start a new life in Canada, Victory Visas ensures your visa application process is smooth and hassle-free.
+          <p className="mt-4 text-lg text-gray-700">
+            Let Victory Visas take the stress out of your visa application, so
+            you can focus on enjoying your trip. Start your Canadian adventure
+            today with the right visa in hand!
           </p>
         </motion.section>
 
         {/* Form Section */}
-        <CountryVisaForm onSubmit={handleFormSubmit} />
+        <motion.section
+          variants={fadeIn}
+          className="mt-16 bg-transparent"
+          aria-labelledby="visa-form-title"
+        >
+          <h2 id="visa-form-title" className="sr-only">
+            Visa Application Form
+          </h2>
+          <CountryVisaForm/>
+
+
+        </motion.section>
       </motion.main>
-    </div>
+    </motion.div>
   );
 };
 

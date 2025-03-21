@@ -56,7 +56,7 @@ const SouthAfrica = () => {
       {/* Header Section */}
       <motion.header
         variants={fadeIn}
-        className="bg-blue-300 text-white text-center py-8 px-6 shadow-lg"
+        className="bg-blue-900 text-white text-center py-8 px-6 shadow-lg"
       >
         <h1 className="text-4xl md:text-6xl font-extrabold">
           Discover South Africa

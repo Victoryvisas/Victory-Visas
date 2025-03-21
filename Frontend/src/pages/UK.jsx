@@ -1,133 +1,197 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import ukImage from "../assets/UK.png";
 import CountryVisaForm from "../Components/CountryVisaForm";
 
 const UK = () => {
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+  // Fade-in animation with slight upward motion
+  const fadeIn = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
+  // Staggered container animation
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  // Staggered list item animation
+  const staggerItem = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  // Scale animation for images
+  const scaleIn = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      className="bg-gradient-to-b from-blue-50 to-blue-100 min-h-screen"
+      aria-label="UK Visa Information"
+    >
       {/* Header Section */}
       <motion.header
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="bg-blue-900 text-white text-center py-6"
+        variants={fadeIn}
+        className="bg-blue-900 text-white text-center py-8 px-6 shadow-lg"
       >
-        <h1 className="text-3xl md:text-5xl font-bold">Explore the UK</h1>
-        <p className="text-lg md:text-xl mt-2">
+        <h1 className="text-4xl md:text-6xl font-extrabold">Discover the UK</h1>
+        <p className="text-lg md:text-2xl mt-3 font-light tracking-wide">
           A Blend of History, Culture, and Innovation
         </p>
       </motion.header>
 
       {/* Main Content Section */}
-      <main className="p-6 md:p-12">
+      <motion.main
+        variants={staggerContainer}
+        className="p-8 md:p-16 max-w-7xl mx-auto"
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Content and Image Section */}
         <motion.section
-          initial="hidden"
-          whileInView="visible"
-          variants={fadeInUp}
-          viewport={{ once: true }}
-          className="text-gray-800"
+          variants={fadeIn}
+          className="mt-12 flex flex-col md:flex-row md:items-center gap-12"
         >
-          <p className="text-lg md:text-xl">
-            The United Kingdom is a country filled with rich history, iconic
-            landmarks, and diverse cultures. From the historic streets of London
-            to the scenic landscapes of Scotland and Wales, the UK offers
-            countless opportunities for travelers, students, and professionals.
-            Whether you're visiting for tourism, study, work, or business, the
-            UK welcomes millions of visitors each year.
-          </p>
+          {/* Text Content */}
+          <div className="flex-1 text-gray-700 leading-relaxed space-y-4">
+            <p className="text-lg md:text-xl">
+              The United Kingdom is a country filled with rich history, iconic
+              landmarks, and diverse cultures. From the historic streets of London
+              to the scenic landscapes of Scotland and Wales, the UK offers
+              countless opportunities for travelers, students, and professionals.
+            </p>
+            <p className="text-lg md:text-xl">
+              Whether you&apos;re visiting for tourism, study, work, or business, the
+              UK welcomes millions of visitors each year.
+            </p>
+          </div>
+
+          {/* Image with Scale Animation */}
+          <motion.div
+            variants={scaleIn}
+            className="flex-shrink-0 shadow-2xl rounded-xl overflow-hidden"
+            whileHover={{ scale: 1.05 }} // Add hover effect
+          >
+            <img
+              src={ukImage}
+              alt="A scenic view of the United Kingdom"
+              className="w-[500px] h-[300px] object-cover"
+              loading="lazy"
+            />
+          </motion.div>
         </motion.section>
 
-        {/* Image Section */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          variants={fadeInUp}
-          viewport={{ once: true }}
-          className="mt-8"
-        >
-          <img
-            src={ukImage}
-            alt="United Kingdom"
-            className="rounded-xl shadow-lg w-full h-auto object-cover"
-          />
-        </motion.section>
+        {/* Visa Information and Victory Visas Sections */}
+        <div className="flex flex-col md:flex-row gap-6 md:gap-12 px-8 md:px-16 py-16">
+          {/* Visa Information Section */}
+          <motion.section
+            variants={fadeIn}
+            className="flex-1 bg-gradient-to-r from-white to-blue-50 rounded-lg shadow-lg p-8"
+            aria-labelledby="visa-info-title"
+          >
+            <h2
+              id="visa-info-title"
+              className="text-3xl font-extrabold text-blue-900 mb-4"
+            >
+              UK Visas: Your Entry to the United Kingdom
+            </h2>
+            <motion.ul
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className="list-disc list-inside text-lg space-y-3 text-gray-700"
+            >
+              {["Tourist Visa: For leisure and tourism.", "Student Visa: For studying at recognized institutions.", "Work Visa: For skilled workers and professionals.", "Business Visa: For engaging in business activities.", "Visitor Visa: For short-term visits."].map(
+                (item, index) => (
+                  <motion.li key={index} variants={staggerItem}>
+                    <span className="font-bold">{item.split(":")[0]}:</span> {item.split(":")[1]}
+                  </motion.li>
+                )
+              )}
+            </motion.ul>
+          </motion.section>
 
-        {/* Visa Information Section */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          variants={fadeInUp}
-          viewport={{ once: true }}
-          className="mt-12 text-gray-800"
-        >
-          <h2 className="text-2xl font-bold text-blue-900">
-            UK Visas: Your Entry to the United Kingdom
-          </h2>
-          <ul className="list-disc list-inside mt-4 text-lg">
-            <li>
-              <span className="font-bold">Tourist Visa:</span> For travelers
-              visiting the UK for leisure, tourism, or to visit family and
-              friends.
-            </li>
-            <li>
-              <span className="font-bold">Student Visa:</span> For international
-              students who wish to study at a recognized UK institution.
-            </li>
-            <li>
-              <span className="font-bold">Work Visa:</span> For professionals
-              seeking to work in the UK, including skilled workers,
-              intra-company transfers, and temporary work visas.
-            </li>
-            <li>
-              <span className="font-bold">Business Visa:</span> For individuals
-              looking to engage in business activities or investment
-              opportunities in the UK.
-            </li>
-            <li>
-              <span className="font-bold">Visitor Visa:</span> For short-term
-              visits for tourism, business, or family visits.
-            </li>
-          </ul>
-          <p className="mt-4 text-lg">
-            Each visa type has specific requirements, and the application
-            process can vary depending on your nationality and travel purpose.
-          </p>
-        </motion.section>
+          {/* How Victory Visas Helps Section */}
+          <motion.section
+            variants={fadeIn}
+            className="flex-1 bg-gradient-to-r from-white to-blue-50 rounded-lg shadow-lg p-8"
+            aria-labelledby="victory-visas-title"
+          >
+            <h2
+              id="victory-visas-title"
+              className="text-3xl font-extrabold text-blue-900 mb-4"
+            >
+              How Victory Visas Helps You Obtain Your UK Visa
+            </h2>
+            <motion.ul
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className="text-lg text-gray-700 space-y-4 leading-relaxed"
+            >
+              {["Visa Consultation: Tailored to your travel purpose.", "Document Preparation: Ensuring all documents meet UK standards.", "Application Submission: Smooth and error-free submissions.", "Visa Updates: Timely updates and support."].map(
+                (item, index) => (
+                  <motion.li key={index} variants={staggerItem}>
+                    <span className="font-bold">{item.split(":")[0]}:</span> {item.split(":")[1]}
+                  </motion.li>
+                )
+              )}
+            </motion.ul>
+          </motion.section>
+        </div>
 
         {/* Call to Action Section */}
         <motion.section
-          initial="hidden"
-          whileInView="visible"
-          variants={fadeInUp}
-          viewport={{ once: true }}
-          className="mt-12 text-center"
+          variants={fadeIn}
+          className="mt-16 text-center bg-gray-50 rounded-lg shadow-lg p-8"
+          whileHover={{ scale: 1.02 }} // Add hover effect
         >
-          <h2 className="text-2xl font-bold text-blue-900">
-            Ready to Visit the UK?
+          <h2 className="text-3xl font-extrabold text-blue-900">
+            Ready to Explore the UK?
           </h2>
-          <p className="mt-4 text-lg text-gray-800">
-            Let Victory Visas handle your UK visa application so you can focus
-            on enjoying your trip or starting your new chapter in the UK.
+          <p className="mt-4 text-lg text-gray-700">
+            Let Victory Visas handle your visa application, so you can focus on
+            your journey. Start your UK adventure with ease!
           </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="mt-6 px-6 py-3 bg-blue-900 text-white rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-          >
-            Apply Now
-          </motion.button>
         </motion.section>
 
         {/* Form Section */}
-        <CountryVisaForm country="UK" />
-      </main>
-    </div>
+        <motion.section
+          variants={fadeIn}
+          className="mt-16 bg-transparent"
+          aria-labelledby="visa-form-title"
+        >
+          <h2 id="visa-form-title" className="sr-only">
+            Visa Application Form
+          </h2>
+          <CountryVisaForm country="UK" />
+        </motion.section>
+      </motion.main>
+    </motion.div>
   );
 };
 
