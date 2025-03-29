@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import travel_insurance_photo from "../assets/travelInsurance.png";
+import axios from "axios";
 
 const TravelInsurance = () => {
   const [formData, setFormData] = useState({
@@ -35,14 +36,20 @@ const TravelInsurance = () => {
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) {
-      alert("Form submitted successfully!");
-      // Perform form submission logic here
+    try {
+      const response = await axios.post(
+        "/api/travel-insurance/submit",
+        formData
+      );
+      console.log(response.data);
+      alert("Thank you for your submission!");
+    } catch (error) {
+      console.error(error);
+      alert("There was an error submitting your inquiry.");
     }
   };
-
   const renderInputField = ({ label, name, type, placeholder }) => (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

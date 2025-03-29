@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
+import axios from "axios";
 
 const EnquiryForm = ({ service, onClose }) => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,7 @@ const EnquiryForm = ({ service, onClose }) => {
     phone: "",
     country: "",
     purpose: "",
+    message: "",
   });
   const [errors, setErrors] = useState({});
 
@@ -38,11 +40,18 @@ const EnquiryForm = ({ service, onClose }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log("Form Submitted:", formData);
-      // You can send the form data to your server here
+      try {
+        const response = await axios.post("/api/enquiry/submit", formData);
+        console.log("Form Submitted:", response.data);
+        alert("Thank you for your submission!");
+        onClose(); // Automatically close the form after submission
+      } catch (error) {
+        console.error(error);
+        alert("There was an error submitting your enquiry.");
+      }
     }
   };
 
@@ -60,7 +69,9 @@ const EnquiryForm = ({ service, onClose }) => {
         >
           <AiOutlineClose size={24} />
         </button>
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Enquiry for {service}</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-4">
+          Enquiry for {service}
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="flex gap-4 mb-4">
             <div className="w-1/2">
@@ -77,7 +88,9 @@ const EnquiryForm = ({ service, onClose }) => {
                 } rounded`}
                 placeholder="Enter your name"
               />
-              {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+              {errors.name && (
+                <p className="text-red-500 text-sm">{errors.name}</p>
+              )}
             </div>
             <div className="w-1/2">
               <label className="block text-gray-700 mb-2" htmlFor="email">
@@ -93,7 +106,9 @@ const EnquiryForm = ({ service, onClose }) => {
                 } rounded`}
                 placeholder="Enter your email"
               />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email}</p>
+              )}
             </div>
           </div>
           <div className="flex gap-4 mb-4">
@@ -111,7 +126,9 @@ const EnquiryForm = ({ service, onClose }) => {
                 } rounded`}
                 placeholder="Enter your phone number"
               />
-              {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+              {errors.phone && (
+                <p className="text-red-500 text-sm">{errors.phone}</p>
+              )}
             </div>
             <div className="w-1/2">
               <label className="block text-gray-700 mb-2" htmlFor="country">
@@ -136,7 +153,9 @@ const EnquiryForm = ({ service, onClose }) => {
                 <option value="France">France</option>
                 <option value="Other">Other</option>
               </select>
-              {errors.country && <p className="text-red-500 text-sm">{errors.country}</p>}
+              {errors.country && (
+                <p className="text-red-500 text-sm">{errors.country}</p>
+              )}
             </div>
           </div>
           <div className="mb-4">
@@ -160,7 +179,9 @@ const EnquiryForm = ({ service, onClose }) => {
               <option value="Immigration">Immigration</option>
               <option value="Other">Other</option>
             </select>
-            {errors.purpose && <p className="text-red-500 text-sm">{errors.purpose}</p>}
+            {errors.purpose && (
+              <p className="text-red-500 text-sm">{errors.purpose}</p>
+            )}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 mb-2" htmlFor="message">
@@ -168,10 +189,12 @@ const EnquiryForm = ({ service, onClose }) => {
             </label>
             <textarea
               id="message"
+              value={formData.message}
+              onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded"
               placeholder="Enter your message"
               rows="4"
-            ></textarea>
+            />
           </div>
           <div className="flex justify-center">
             <button

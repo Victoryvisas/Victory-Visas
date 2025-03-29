@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import flight_photo from "../assets/flighttt.png";
+import axios from 'axios';
 
 const FlightTickets = () => {
   const [formData, setFormData] = useState({
@@ -43,14 +44,18 @@ const FlightTickets = () => {
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) {
-      alert("Form submitted successfully!");
-      // Perform form submission logic here
+    try {
+      const response = await axios.post('/api/flight-tickets/submit', formData);
+      console.log(response.data); // Handle success message
+      alert("Thank you for your submission!");
+    } catch (error) {
+      console.error(error); // Handle error
+      alert("There was an error submitting your inquiry.");
     }
   };
-
+  
   const fadeIn = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.8 } },

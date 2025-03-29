@@ -1,3 +1,4 @@
+import axios from "axios";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
@@ -15,14 +16,20 @@ const CountryVisaForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted: ", formData);
-    alert("Thank you for your submission!");
+    try {
+      const response = await axios.post('/api/country-visa/submit', formData);
+      console.log(response.data); // Handle success message
+      alert("Thank you for your submission!");
+    } catch (error) {
+      console.error(error); // Handle error
+      alert("There was an error submitting your inquiry.");
+    }
   };
 
   return (
-    <div className=" py-10">
+    <div className="py-10">
       <div className="max-w-4xl mx-auto bg-gray-50 rounded-xl shadow-lg p-8">
         <form onSubmit={handleSubmit} className="space-y-6">
           <h2 className="text-3xl font-bold text-center text-blue-900">
