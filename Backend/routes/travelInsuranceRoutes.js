@@ -45,5 +45,45 @@ router.get("/inquiries", async (req, res) => {
     return res.status(500).json({ error: "Server error" });
   }
 });
+// routes/travelInsuranceRoutes.js
+// Add these routes
+router.delete("/:id", async (req, res) => {
+  try {
+    const deletedInquiry = await TravelInsurance.findByIdAndDelete(req.params.id);
+    if (!deletedInquiry) {
+      return res.status(404).json({ error: "Inquiry not found" });
+    }
+    return res.status(200).json({ message: "Inquiry deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/inquiries", async (req, res) => {
+  try {
+    const { search, destination } = req.query;
+    let query = {};
+    
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { contact: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { destination: { $regex: search, $options: 'i' } }
+      ];
+    }
+    
+    if (destination && destination !== "all") {
+      query.destination = destination;
+    }
+    
+    const inquiries = await TravelInsurance.find(query).sort({ createdAt: -1 });
+    return res.status(200).json(inquiries);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
 
 export default router;

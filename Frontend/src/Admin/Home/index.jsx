@@ -8,6 +8,13 @@ const AdminWhyUs = lazy(() => import("../AdminWhyUs"));
 const AdminServices = lazy(() => import("../AdminServices"));
 const AdminCountries = lazy(() => import("../AdminCountries"));
 const AdminContactUs = lazy(() => import("../AdminContactUs"));
+const AdminEnquiryForm = lazy(() => import("../AdminEnquiryForm"));
+const AdminServiceForm = lazy(() => import("../AdminServiceForm"));
+
+const AdminCountryForm = lazy(() => import("../AdminCountryForm"));
+
+const AdminFlightForm = lazy(() => import("../AdminFlightForm"));
+const AdminInsuranceForm = lazy(() => import("../AdminInsuranceForm"));
 
 
 // Fallback loader
@@ -29,6 +36,11 @@ const Home = () => {
       { label: "Services", component: <AdminServices /> },
       { label: "Countries", component: <AdminCountries /> },
       { label: "Contact Us", component: <AdminContactUs /> },
+      { label: "Enquiry Form", component: <AdminEnquiryForm /> },
+      { label: "Country Form", component: <AdminCountryForm /> },
+      { label: "Service Form", component: <AdminServiceForm /> },
+      { label: "Flight Form", component: <AdminFlightForm /> },
+      { label: "Insurance Form", component: <AdminInsuranceForm /> },
     ],
     []
   );

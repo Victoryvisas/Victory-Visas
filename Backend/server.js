@@ -43,10 +43,10 @@ app.use("/api/about", aboutRoutes); // Add about routes
 app.use("/api/why-us", whyUsRoutes); // Add WhyUs routes
 app.use("/api/contact", contactRoutes);
 app.use("/api/visaRequests", ServiceFormRoutes); // Add ServiceForm routes
-app.use("/api/country-visa", countryVisaFormRoutes);
-app.use("/api/flight-tickets", flightTicketRoutes);
+app.use("/api/visa-inquiries", countryVisaFormRoutes);
+app.use("/api/flightTickets", flightTicketRoutes);
 app.use("/api/travel-insurance", travelInsuranceRoutes);
-app.use("/api/enquiry", enquiryRoutes);
+app.use("/api/enquiries", enquiryRoutes);
 app.use("/api/victory-visas", adminRoutes);
 
 // Start the server

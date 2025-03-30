@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import axios from 'axios';
+import { toast } from "react-toastify";
 
 const ServiceVisaForm = () => {
   const [formData, setFormData] = useState({
@@ -19,10 +20,19 @@ const ServiceVisaForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/visaRequests/submit', formData);
-      console.log(response.data); // Handle success message
+      // Updated endpoint to match your backend route
+      const response = await axios.post('http://localhost:5000/api/visaRequests/submit', formData);
+      toast.success("Request submitted successfully!");
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        visaType: '',
+        message: ''
+      });
     } catch (error) {
-      console.error(error); // Handle error
+      toast.error(error.response?.data?.error || "Failed to submit request. Please try again.");
+      console.error("Submission error:", error);
     }
   };
 
@@ -34,7 +44,7 @@ const ServiceVisaForm = () => {
       transition={{ duration: 0.8, delay: 0.2 }}
     >
       <h2 className="text-lg font-semibold text-gray-800 sm:text-xl text-center sm:text-left">
-        Contact Us for Business Visa Assistance
+        Contact Us for Visa Assistance
       </h2>
       <form className="flex flex-col space-y-4 h-full" onSubmit={handleSubmit}>
         <input
@@ -43,6 +53,7 @@ const ServiceVisaForm = () => {
           value={formData.name}
           placeholder="Name"
           onChange={handleChange}
+          required
           className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
@@ -51,6 +62,7 @@ const ServiceVisaForm = () => {
           value={formData.email}
           placeholder="Email"
           onChange={handleChange}
+          required
           className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
@@ -59,12 +71,14 @@ const ServiceVisaForm = () => {
           value={formData.phone}
           placeholder="Phone"
           onChange={handleChange}
+          required
           className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <select
           name="visaType"
           value={formData.visaType}
           onChange={handleChange}
+          required
           className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">Select Visa Type</option>
@@ -79,6 +93,7 @@ const ServiceVisaForm = () => {
           placeholder="Message"
           rows="4"
           onChange={handleChange}
+          required
           className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         ></textarea>
         <motion.button

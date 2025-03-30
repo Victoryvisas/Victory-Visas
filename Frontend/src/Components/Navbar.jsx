@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { HashLink } from "react-router-hash-link";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react"; // Using Lucide icons
-import logo from "../assets/logoo.png";
+import logo from "../assets/logo1.png";
 
 const Navbar = () => {
   const location = useLocation();

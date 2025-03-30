@@ -47,7 +47,7 @@ const FlightTickets = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/flight-tickets/submit', formData);
+      const response = await axios.post('http://localhost:5000/api/flightTickets/submit', formData);
       console.log(response.data); // Handle success message
       alert("Thank you for your submission!");
     } catch (error) {

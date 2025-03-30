@@ -1,11 +1,16 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { AiOutlineClose } from "react-icons/ai";
 import businessVisaImage from "../assets/immigration.jpg";
 import touristVisaImage from "../assets/Tourist.jpg";
 import studentVisaImage from "../assets/study.jpg";
 import permanentResidencyImage from "../assets/study.jpg";
+import EnquiryForm from "./EnquiryForm"; // Adjust the import path as needed
 
 const ServiceSection = () => {
+  const [isFormVisible, setIsFormVisible] = useState(false);
+
   const services = [
     {
       title: "Business Visas",
@@ -64,7 +69,45 @@ const ServiceSection = () => {
             </motion.div>
           ))}
         </div>
+        
       </div>
+      {/* Enquiry Button */}
+      <div className="flex justify-center py-8">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsFormVisible(true)}
+          className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl"
+        >
+          Explore More
+        </motion.button>
+      </div>
+      
+
+      {/* Enquiry Form Modal */}
+      {isFormVisible && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black bg-opacity-50"
+            onClick={() => setIsFormVisible(false)}
+          ></div>
+
+          {/* Form Container */}
+          <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-lg z-60">
+            <button
+              className="absolute top-3 right-3 text-gray-600 hover:text-gray-900"
+              onClick={() => setIsFormVisible(false)}
+            >
+              <AiOutlineClose size={24} />
+            </button>
+            <EnquiryForm
+              service="Visa Inquiry"
+              onClose={() => setIsFormVisible(false)}
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 };

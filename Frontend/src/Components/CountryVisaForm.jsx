@@ -1,138 +1,116 @@
+import React, { useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { useState } from "react";
 
-const CountryVisaForm = () => {
+export default function CountryVisaForm() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    visaType: "",
-    message: "",
+    name: "", email: "", phone: "", country: "", visaType: "", message: ""
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const countries = ["Australia", "Canada", "Germany", "India", "UK", "USA", "Other"];
+  const visaTypes = ["Tourist Visa", "Business Visa", "Study Visa", "Permanent&CitizenShip Visas", "Other"];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const response = await axios.post('/api/country-visa/submit', formData);
-      console.log(response.data); // Handle success message
-      alert("Thank you for your submission!");
+      await axios.post("/api/visa-inquiries", formData);
+      alert("Inquiry submitted successfully!");
+      setFormData({
+        name: "", email: "", phone: "", country: "", visaType: "", message: ""
+      });
     } catch (error) {
-      console.error(error); // Handle error
-      alert("There was an error submitting your inquiry.");
+      alert("Submission failed. Please try again.");
     }
+    setLoading(false);
   };
 
   return (
-    <div className="py-10">
-      <div className="max-w-4xl mx-auto bg-gray-50 rounded-xl shadow-lg p-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <h2 className="text-3xl font-bold text-center text-blue-900">
-            Visa Inquiry Form
-          </h2>
-          {/* Input Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-lg font-semibold text-gray-700">
-                Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="mt-2 p-3 w-full border rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="Your Full Name"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-lg font-semibold text-gray-700">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="mt-2 p-3 w-full border rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="Your Email Address"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-lg font-semibold text-gray-700">
-                Phone
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="mt-2 p-3 w-full border rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="Your Phone Number"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-lg font-semibold text-gray-700">
-                Visa Type
-              </label>
-              <select
-                name="visaType"
-                value={formData.visaType}
-                onChange={handleChange}
-                className="mt-2 p-3 w-full border rounded-lg focus:ring-2 focus:ring-blue-500"
-                required
-              >
-                <option value="" disabled>
-                  Select Visa Type
-                </option>
-                <option value="Tourist Visa">Tourist Visa</option>
-                <option value="Business Visa">Business Visa</option>
-                <option value="Study Visa">Study Visa</option>
-                <option value="Permanent&CitizenShip Visas">
-                  Permanent & Citizenship Visas
-                </option>
-              </select>
-            </div>
-          </div>
-
-          {/* Message Field */}
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-center">Visa Inquiry Form</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-lg font-semibold text-gray-700">
-              Message
-            </label>
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              className="mt-2 p-3 w-full border rounded-lg focus:ring-2 focus:ring-blue-500"
-              rows="5"
-              placeholder="Leave a message (optional)"
+            <label className="block mb-2">Name</label>
+            <input
+              type="text"
+              required
+              className="w-full p-2 border rounded"
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
             />
           </div>
-
-          {/* Submit Button */}
-          <div className="text-center">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              type="submit"
-              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl"
-            >
-              Submit Inquiry
-            </motion.button>
+          <div>
+            <label className="block mb-2">Email</label>
+            <input
+              type="email"
+              required
+              className="w-full p-2 border rounded"
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+            />
           </div>
-        </form>
-      </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block mb-2">Phone</label>
+            <input
+              type="tel"
+              required
+              className="w-full p-2 border rounded"
+              value={formData.phone}
+              onChange={(e) => setFormData({...formData, phone: e.target.value})}
+            />
+          </div>
+          <div>
+            <label className="block mb-2">Country</label>
+            <select
+              required
+              className="w-full p-2 border rounded"
+              value={formData.country}
+              onChange={(e) => setFormData({...formData, country: e.target.value})}
+            >
+              <option value="">Select Country</option>
+              {countries.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label className="block mb-2">Visa Type</label>
+          <select
+            required
+            className="w-full p-2 border rounded"
+            value={formData.visaType}
+            onChange={(e) => setFormData({...formData, visaType: e.target.value})}
+          >
+            <option value="">Select Visa Type</option>
+            {visaTypes.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </div>
+
+        <div>
+          <label className="block mb-2">Message</label>
+          <textarea
+            className="w-full p-2 border rounded"
+            rows="4"
+            value={formData.message}
+            onChange={(e) => setFormData({...formData, message: e.target.value})}
+          />
+        </div>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          type="submit"
+          className="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700"
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Submit Inquiry"}
+        </motion.button>
+      </form>
     </div>
   );
-};
-
-export default CountryVisaForm;
+}

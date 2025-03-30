@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import "./index.css";
 import { motion } from "framer-motion";
 import Navbar from "./Components/Navbar";
@@ -21,52 +21,62 @@ import Canada from "./pages/Canada";
 import TouristVisaServices from "./pages/TouristVisaServices";
 import StudyVisaServices from "./pages/StudyVisaServices";
 import PermanentVisaServices from "./pages/PermanentVisaServices";
-
 import Home from "./Admin/Home";
 import Login from "./Admin/Login";
-//import { ShowLoading, HideLoading } from './redux/rootSlice'
 
 function App() {
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/business-visas" element={<BusinessVisaServices />} />
-        <Route path="/tourist-visas" element={<TouristVisaServices />} />
-        <Route path="/student-visas" element={<StudyVisaServices />} />
-        <Route path="/permanent-residency" element={<PermanentVisaServices/>} />
-
-        <Route path="/flight-tickets" element={<FlightTickets />} />
-        <Route path="/travel-insurance" element={<TravelInsurance />} />
-        <Route path="/south-africa" element={<SouthAfrica />} />
-        <Route path="/australia" element={<Australia />} />
-        <Route path="/new-zealand" element={<NewZealand />} />
-        <Route path="/uk" element={<UK />} />
-        <Route path="/usa" element={<USA />} />
-        <Route path="/canada" element={<Canada />} />
-
-          {/* Admin Panel */}
-        <Route path="/admin" element={<Home />} />
-        <Route path="/admin-login" element={<Login />} />
-
-      </Routes>
-      
+      <AppContent />
     </Router>
   );
 }
 
+const AppContent = () => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
+  return (
+    <div className="app-container">
+      {!isAdminRoute && <Navbar />}
+      
+      <main className={isAdminRoute ? "admin-content" : ""}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/business-visas" element={<BusinessVisaServices />} />
+          <Route path="/tourist-visas" element={<TouristVisaServices />} />
+          <Route path="/student-visas" element={<StudyVisaServices />} />
+          <Route path="/permanent-residency" element={<PermanentVisaServices />} />
+
+          <Route path="/flight-tickets" element={<FlightTickets />} />
+          <Route path="/travel-insurance" element={<TravelInsurance />} />
+          <Route path="/south-africa" element={<SouthAfrica />} />
+          <Route path="/australia" element={<Australia />} />
+          <Route path="/new-zealand" element={<NewZealand />} />
+          <Route path="/uk" element={<UK />} />
+          <Route path="/usa" element={<USA />} />
+          <Route path="/canada" element={<Canada />} />
+
+          {/* Admin Panel - Navbar won't appear for these routes */}
+          <Route path="/admin" element={<Home />} />
+          <Route path="/admin-login" element={<Login />} />
+        </Routes>
+      </main>
+
+      {!isAdminRoute && <Footer />}
+    </div>
+  );
+};
+
 const HomePage = () => {
-  // Animation variants for the sections
   const sectionVariants = {
-    hidden: { opacity: 0, y: 100 }, // More pronounced slide-down effect
-    visible: { opacity: 1, y: 0 },  // Normal position
+    hidden: { opacity: 0, y: 100 },
+    visible: { opacity: 1, y: 0 },
   };
 
-  // Common transition settings
   const transitionSettings = {
-    duration: 0.8, // Slightly longer duration for smoothness
-    ease: [0.42, 0, 0.58, 1], // Custom cubic bezier easing for smooth acceleration/deceleration
+    duration: 0.8,
+    ease: [0.42, 0, 0.58, 1],
   };
 
   return (
@@ -76,7 +86,7 @@ const HomePage = () => {
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }} // Trigger animation early
+        viewport={{ once: true, amount: 0.1 }}
         transition={transitionSettings}
       >
         <HeroSection />
@@ -87,7 +97,7 @@ const HomePage = () => {
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }} // Adjust visibility threshold
+        viewport={{ once: true, amount: 0.15 }}
         transition={transitionSettings}
       >
         <ServicesSection />
@@ -98,11 +108,8 @@ const HomePage = () => {
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }} // Adjust visibility threshold
-        transition={{
-          ...transitionSettings,
-          delay: 0.2, // Add a slight delay for better sequencing
-        }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ ...transitionSettings, delay: 0.2 }}
       >
         <CountriesSection />
       </motion.div>

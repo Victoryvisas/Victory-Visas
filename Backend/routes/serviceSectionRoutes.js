@@ -13,15 +13,42 @@ router.get("/", async (req, res) => {
   }
 });
 
-// POST: Add or update services
+// POST: Add a new service
 router.post("/", async (req, res) => {
-  const { services } = req.body;
+  const { title, description, link, imageUrl } = req.body;
   try {
-    await Service.deleteMany(); // Remove existing services to update the entire list
-    const createdServices = await Service.insertMany(services);
-    res.status(200).json({ message: "Services updated successfully", services: createdServices });
+    const newService = new Service({
+      title,
+      description,
+      link,
+      imageUrl,
+    });
+
+    const savedService = await newService.save();
+    res.status(201).json({ message: "Service added successfully", service: savedService });
   } catch (error) {
-    res.status(500).json({ message: "Failed to update services", error });
+    res.status(500).json({ message: "Failed to add service", error });
+  }
+});
+
+// PUT: Update an existing service by ID
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, description, link, imageUrl } = req.body;
+  try {
+    const updatedService = await Service.findByIdAndUpdate(
+      id,
+      { title, description, link, imageUrl, updatedAt: Date.now() },
+      { new: true } // Return the updated document
+    );
+
+    if (updatedService) {
+      res.status(200).json({ message: "Service updated successfully", service: updatedService });
+    } else {
+      res.status(404).json({ message: "Service not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update service", error });
   }
 });
 
