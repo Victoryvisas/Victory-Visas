@@ -6,4 +6,9 @@ export default defineConfig({
   esbuild: {
     loader: "jsx", // Ensure JSX is enabled
   },
+  server: {
+    proxy: {
+      "/api": "http://localhost:5000", // Forward any API request to the backend
+    },
+  },
 });

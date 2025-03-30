@@ -88,7 +88,7 @@ const Navbar = () => {
           ) : (
             <Link
               to="/"
-              onClick={() => handleHashLink("/", "#")}
+              onClick={() =>{ handleHashLink("/", "#"),  setIsMenuOpen(false)}}
               className="text-lg hover:text-white hover:bg-cyan-500 p-2 rounded transition duration-300"
             >
               Home

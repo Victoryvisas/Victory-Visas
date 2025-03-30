@@ -7,17 +7,12 @@ import photo1 from "../assets/heroo1.png";
 import photo2 from "../assets/hero2.png";
 import photo3 from "../assets/hero3.png";
 import photo4 from "../assets/heroo4.png";
+import EnquiryForm from "./EnquiryForm";
 
 const HeroSection = () => {
   const images = [photo1, photo2, photo3, photo4];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFormVisible, setIsFormVisible] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [formErrors, setFormErrors] = useState({});
 
   const europeanCountries = [
     "Austria",
@@ -55,22 +50,6 @@ const HeroSection = () => {
     return () => clearInterval(interval);
   }, [images.length]);
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    const errors = {};
-    if (!formData.name.trim()) errors.name = "Name is required";
-    if (!formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email))
-      errors.email = "Valid email is required";
-    if (!formData.message.trim()) errors.message = "Message cannot be empty";
-
-    if (Object.keys(errors).length === 0) {
-      console.log("Form submitted successfully:", formData);
-      setIsFormVisible(false);
-    } else {
-      setFormErrors(errors);
-    }
-  };
-
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* Background Carousel */}
@@ -105,12 +84,11 @@ const HeroSection = () => {
           </p>
         </motion.div>
 
-        {/* Requirements Section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="flex flex-col md:flex-row items-center justify-center gap-4 w-full max-w-4xl"
+          className="flex flex-col md:flex-row  items-center justify-center gap-4 w-full max-w-4xl"
           style={{ alignItems: "flex-end" }}
         >
           {/* Nationality Dropdown */}
@@ -167,107 +145,33 @@ const HeroSection = () => {
         href="https://wa.me/919818718419" // Replace with your WhatsApp number
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-0 left-4 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition transform hover:scale-110"
+        className="fixed bottom-0 right-4 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition transform hover:scale-110"
       >
         <FaWhatsapp size={28} />
       </a>
 
       {/* Popup Form */}
-      {isFormVisible && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-          className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center"
-        >
-          <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-md p-6 relative">
-            {/* Close Button */}
-            <button
-              aria-label="Close form"
-              onClick={() => setIsFormVisible(false)}
-              className="absolute top-4 right-4 text-gray-700 hover:text-black z-60"
-            >
-              <AiOutlineClose size={24} />
-            </button>
+{isFormVisible && (
+  <div className="fixed inset-0 flex items-center justify-center z-50">
+    {/* Overlay */}
+    <div
+      className="absolute inset-0 bg-black bg-opacity-50"
+      onClick={() => setIsFormVisible(false)}
+    ></div>
 
-            <h2 className="text-2xl font-bold mb-4 text-center">
-              Visa Inquiry
-            </h2>
-            <form onSubmit={handleFormSubmit}>
-              <div className="mb-4">
-                <label htmlFor="name" className="block text-gray-700 mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  className={`w-full p-3 rounded border ${
-                    formErrors.name ? "border-red-500" : "border-gray-300"
-                  }`}
-                  placeholder="Enter your name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                />
-                {formErrors.name && (
-                  <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
-                )}
-              </div>
-              <div className="mb-4">
-                <label htmlFor="email" className="block text-gray-700 mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className={`w-full p-3 rounded border ${
-                    formErrors.email ? "border-red-500" : "border-gray-300"
-                  }`}
-                  placeholder="Enter your email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                />
-                {formErrors.email && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {formErrors.email}
-                  </p>
-                )}
-              </div>
-              <div className="mb-4">
-                <label htmlFor="message" className="block text-gray-700 mb-2">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  className={`w-full p-3 rounded border ${
-                    formErrors.message ? "border-red-500" : "border-gray-300"
-                  }`}
-                  placeholder="Your message..."
-                  rows={4}
-                  value={formData.message}
-                  onChange={(e) =>
-                    setFormData({ ...formData, message: e.target.value })
-                  }
-                ></textarea>
-                {formErrors.message && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {formErrors.message}
-                  </p>
-                )}
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700"
-              >
-                Submit
-              </button>
-            </form>
-          </div>
-        </motion.div>
-      )}
+    {/* Form Container */}
+    <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-lg z-60">
+      <button
+        className="absolute top-3 right-3 text-gray-600 hover:text-gray-900"
+        onClick={() => setIsFormVisible(false)}
+      >
+        <AiOutlineClose size={24} />
+      </button>
+      <EnquiryForm service="Visa Inquiry" onClose={() => setIsFormVisible(false)} />
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

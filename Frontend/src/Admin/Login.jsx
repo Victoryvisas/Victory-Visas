@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { message } from "antd";
 import { ShowLoading, HideLoading } from '../redux/rootSlice';
@@ -10,6 +11,7 @@ function Login() {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +27,7 @@ function Login() {
       if (response.data.success) {
         message.success(response.data.message);
         localStorage.setItem("token", JSON.stringify(response.data.token));
-        window.location.href = "/admin"; // Redirect to admin dashboard
+        navigate("/admin"); // Redirect to admin dashboard using React Router
       } else {
         message.error(response.data.message);
       }
