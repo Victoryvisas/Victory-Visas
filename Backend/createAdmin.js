@@ -21,8 +21,8 @@ const connectDB = async () => {
 const createAdmin = async () => {
   await connectDB();
 
-  const email = "admin@victory.com";
-  const password = "password123"; // Use a secure password in production
+  const email = "";
+  const password = ""; // Use a secure password in production
 
   try {
     // Check if the admin already exists
