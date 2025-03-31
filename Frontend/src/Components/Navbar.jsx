@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { HashLink } from "react-router-hash-link";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react"; // Using Lucide icons
-import logo from "../assets/logo1.png";
+import logo from "../assets/LOGO.png";
 
 const Navbar = () => {
   const location = useLocation();
@@ -56,7 +56,7 @@ const Navbar = () => {
         <Link to='/'><img className="h-10 inline mr-2" src={logo} alt="Logo" /></Link>
         <span className="text-xl font-bold cursor-pointer text-cyan-600">
           <Link to='/'>
-          VICTORY VISA
+          VICTORY VISAS
         </Link>
         </span>
       </div>

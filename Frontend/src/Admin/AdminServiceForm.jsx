@@ -11,6 +11,10 @@ const AdminServiceForm = () => {
   const [visaTypeFilter, setVisaTypeFilter] = useState("all");
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   const visaTypes = ["business", "study", "tourist", "immigration"];
 
@@ -25,7 +29,7 @@ const AdminServiceForm = () => {
 
   useEffect(() => {
     fetchRequests();
-  }, []);
+  }, [visaTypeFilter]); // Add visaTypeFilter to dependency array
 
   const fetchRequests = async () => {
     try {
@@ -37,6 +41,7 @@ const AdminServiceForm = () => {
         }
       });
       setRequests(data);
+      setCurrentPage(1); // Reset to first page when filters change
       setLoading(false);
     } catch (error) {
       console.error("Error fetching requests:", error);
@@ -44,6 +49,15 @@ const AdminServiceForm = () => {
       setLoading(false);
     }
   };
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentRequests = requests.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(requests.length / itemsPerPage);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const deleteRequest = async (id) => {
     if (window.confirm("Are you sure you want to delete this request?")) {
@@ -61,6 +75,48 @@ const AdminServiceForm = () => {
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  // Pagination component
+  const Pagination = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(i);
+    }
+
+    return (
+      <div className="flex justify-center mt-4">
+        <nav className="inline-flex rounded-md shadow">
+          <button
+            onClick={() => paginate(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          {pageNumbers.map(number => (
+            <button
+              key={number}
+              onClick={() => paginate(number)}
+              className={`px-3 py-1 border-t border-b border-gray-300 bg-white text-sm font-medium ${
+                currentPage === number 
+                  ? 'bg-blue-50 text-blue-600 border-blue-500'
+                  : 'text-gray-500 hover:bg-gray-50'
+              }`}
+            >
+              {number}
+            </button>
+          ))}
+          <button
+            onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </nav>
+      </div>
+    );
   };
 
   return (
@@ -111,105 +167,111 @@ const AdminServiceForm = () => {
           <p>No requests found matching your criteria.</p>
         </div>
       ) : isMobile ? (
-        <div className="space-y-4">
-          {requests.map(request => (
-            <div key={request._id} className="bg-white rounded-lg shadow p-4">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-medium">{request.name}</h3>
-                <span className="px-2 py-1 rounded text-xs bg-blue-100 text-blue-800 capitalize">
-                  {request.visaType}
-                </span>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2 text-sm mb-3">
-                <div>
-                  <p className="text-gray-500">Email</p>
-                  <p className="truncate">{request.email}</p>
+        <>
+          <div className="space-y-4">
+            {currentRequests.map(request => (
+              <div key={request._id} className="bg-white rounded-lg shadow p-4">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-medium">{request.name}</h3>
+                  <span className="px-2 py-1 rounded text-xs bg-blue-100 text-blue-800 capitalize">
+                    {request.visaType}
+                  </span>
                 </div>
-                <div>
-                  <p className="text-gray-500">Phone</p>
-                  <p>{request.phone}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Date</p>
-                  <p>{formatDate(request.createdAt)}</p>
-                </div>
-              </div>
-              
-              <div className="flex justify-between items-center pt-2 border-t">
-                <button
-                  onClick={() => setSelectedRequest(request)}
-                  className="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1"
-                >
-                  <AiOutlineEye size={16} /> View
-                </button>
                 
-                <button
-                  onClick={() => deleteRequest(request._id)}
-                  className="text-red-600 hover:text-red-800 text-sm flex items-center gap-1"
-                >
-                  <AiOutlineDelete size={16} /> Delete
-                </button>
+                <div className="grid grid-cols-2 gap-2 text-sm mb-3">
+                  <div>
+                    <p className="text-gray-500">Email</p>
+                    <p className="truncate">{request.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Phone</p>
+                    <p>{request.phone}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Date</p>
+                    <p>{formatDate(request.createdAt)}</p>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center pt-2 border-t">
+                  <button
+                    onClick={() => setSelectedRequest(request)}
+                    className="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1"
+                  >
+                    <AiOutlineEye size={16} /> View
+                  </button>
+                  
+                  <button
+                    onClick={() => deleteRequest(request._id)}
+                    className="text-red-600 hover:text-red-800 text-sm flex items-center gap-1"
+                  >
+                    <AiOutlineDelete size={16} /> Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Date</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Name</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Email</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Phone</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Visa Type</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {requests.map(request => (
-                  <tr key={request._id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(request.createdAt)}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {request.name}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {request.email}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {request.phone}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 capitalize">
-                      {request.visaType}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => setSelectedRequest(request)}
-                          className="text-blue-600 hover:text-blue-800"
-                          title="View details"
-                        >
-                          <AiOutlineEye size={18} />
-                        </button>
-                        <button
-                          onClick={() => deleteRequest(request._id)}
-                          className="text-red-600 hover:text-red-800"
-                          title="Delete"
-                        >
-                          <AiOutlineDelete size={18} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            ))}
           </div>
-        </div>
+          <Pagination />
+        </>
+      ) : (
+        <>
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Date</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Name</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Email</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Phone</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Visa Type</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {currentRequests.map(request => (
+                    <tr key={request._id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {formatDate(request.createdAt)}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {request.name}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {request.email}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {request.phone}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 capitalize">
+                        {request.visaType}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setSelectedRequest(request)}
+                            className="text-blue-600 hover:text-blue-800"
+                            title="View details"
+                          >
+                            <AiOutlineEye size={18} />
+                          </button>
+                          <button
+                            onClick={() => deleteRequest(request._id)}
+                            className="text-red-600 hover:text-red-800"
+                            title="Delete"
+                          >
+                            <AiOutlineDelete size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination />
+          </div>
+        </>
       )}
 
       {selectedRequest && (

@@ -11,6 +11,10 @@ const AdminEnquiryForm = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedEnquiry, setSelectedEnquiry] = useState(null);
   const [notes, setNotes] = useState("");
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   // Fetch enquiries with filters
   const fetchEnquiries = async () => {
@@ -22,6 +26,7 @@ const AdminEnquiryForm = () => {
       
       const response = await axios.get("/api/enquiries", { params });
       setEnquiries(response.data);
+      setCurrentPage(1); // Reset to first page when filters change
       setError("");
     } catch (err) {
       setError("Failed to fetch enquiries. Please try again.");
@@ -34,6 +39,15 @@ const AdminEnquiryForm = () => {
   useEffect(() => {
     fetchEnquiries();
   }, [statusFilter]);
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentEnquiries = enquiries.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(enquiries.length / itemsPerPage);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   // Update enquiry status
   const updateStatus = async (id, newStatus) => {
@@ -93,6 +107,47 @@ const AdminEnquiryForm = () => {
     );
   };
 
+  // Pagination component
+  const Pagination = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(i);
+    }
+
+    return (
+      <div className="flex justify-center mt-4">
+        <nav className="inline-flex rounded-md shadow">
+          <button
+            onClick={() => paginate(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          {pageNumbers.map(number => (
+            <button
+              key={number}
+              onClick={() => paginate(number)}
+              className={`px-3 py-1 border-t border-b border-gray-300 bg-white text-sm font-medium ${
+                currentPage === number 
+                  ? 'bg-blue-50 text-blue-600 border-blue-500'
+                  : 'text-gray-500 hover:bg-gray-50'
+              }`}
+            >
+              {number}
+            </button>
+          ))}
+          <button
+            onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </nav>
+      </div>
+    );
+  };
 
   if (loading) {
     return (
@@ -172,8 +227,8 @@ const AdminEnquiryForm = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {enquiries.length > 0 ? (
-                enquiries.map((enquiry) => (
+              {currentEnquiries.length > 0 ? (
+                currentEnquiries.map((enquiry) => (
                   <tr key={enquiry._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(enquiry.createdAt).toLocaleDateString()}
@@ -236,6 +291,7 @@ const AdminEnquiryForm = () => {
             </tbody>
           </table>
         </div>
+        <Pagination />
       </div>
 
       {/* Enquiry Detail Modal */}

@@ -1,4 +1,3 @@
-// components/TravelInsuranceAdmin.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FiSearch, FiRefreshCw } from "react-icons/fi";
@@ -12,6 +11,10 @@ const AdminTravelInsurance = () => {
   const [destinationFilter, setDestinationFilter] = useState("all");
   const [selectedInquiry, setSelectedInquiry] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   const destinations = ["New York", "London", "Paris", "Tokyo", "Dubai", "Other"];
 
@@ -23,7 +26,7 @@ const AdminTravelInsurance = () => {
 
   useEffect(() => {
     fetchInquiries();
-  }, []);
+  }, [destinationFilter]); // Add destinationFilter to dependency array
 
   const fetchInquiries = async () => {
     try {
@@ -35,6 +38,7 @@ const AdminTravelInsurance = () => {
         }
       });
       setInquiries(data);
+      setCurrentPage(1); // Reset to first page when filters change
       setLoading(false);
     } catch (error) {
       console.error("Error fetching inquiries:", error);
@@ -42,6 +46,15 @@ const AdminTravelInsurance = () => {
       setLoading(false);
     }
   };
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentInquiries = inquiries.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(inquiries.length / itemsPerPage);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const deleteInquiry = async (id) => {
     if (window.confirm("Are you sure you want to delete this inquiry?")) {
@@ -64,6 +77,48 @@ const AdminTravelInsurance = () => {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  // Pagination component
+  const Pagination = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(i);
+    }
+
+    return (
+      <div className="flex justify-center mt-4">
+        <nav className="inline-flex rounded-md shadow">
+          <button
+            onClick={() => paginate(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          {pageNumbers.map(number => (
+            <button
+              key={number}
+              onClick={() => paginate(number)}
+              className={`px-3 py-1 border-t border-b border-gray-300 bg-white text-sm font-medium ${
+                currentPage === number 
+                  ? 'bg-blue-50 text-blue-600 border-blue-500'
+                  : 'text-gray-500 hover:bg-gray-50'
+              }`}
+            >
+              {number}
+            </button>
+          ))}
+          <button
+            onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </nav>
+      </div>
+    );
   };
 
   return (
@@ -112,112 +167,118 @@ const AdminTravelInsurance = () => {
           <p>No inquiries found matching your criteria.</p>
         </div>
       ) : isMobile ? (
-        <div className="space-y-4">
-          {inquiries.map(inquiry => (
-            <div key={inquiry._id} className="bg-white rounded-lg shadow p-4">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-medium">{inquiry.name}</h3>
-                <span className="px-2 py-1 rounded text-xs bg-blue-100 text-blue-800">
-                  {inquiry.destination}
-                </span>
+        <>
+          <div className="space-y-4">
+            {currentInquiries.map(inquiry => (
+              <div key={inquiry._id} className="bg-white rounded-lg shadow p-4">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-medium">{inquiry.name}</h3>
+                  <span className="px-2 py-1 rounded text-xs bg-blue-100 text-blue-800">
+                    {inquiry.destination}
+                  </span>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-2 text-sm mb-3">
+                  <div>
+                    <p className="text-gray-500">Contact</p>
+                    <p>{inquiry.contact}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Email</p>
+                    <p className="truncate">{inquiry.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Travel Dates</p>
+                    <p>{inquiry.travelDates}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Submitted</p>
+                    <p>{formatDate(inquiry.createdAt)}</p>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center pt-2 border-t">
+                  <button
+                    onClick={() => setSelectedInquiry(inquiry)}
+                    className="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1"
+                  >
+                    <AiOutlineEye size={16} /> View
+                  </button>
+                  <button
+                    onClick={() => deleteInquiry(inquiry._id)}
+                    className="text-red-600 hover:text-red-800 text-sm flex items-center gap-1"
+                  >
+                    <AiOutlineDelete size={16} /> Delete
+                  </button>
+                </div>
               </div>
-              
-              <div className="grid grid-cols-2 gap-2 text-sm mb-3">
-                <div>
-                  <p className="text-gray-500">Contact</p>
-                  <p>{inquiry.contact}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Email</p>
-                  <p className="truncate">{inquiry.email}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Travel Dates</p>
-                  <p>{inquiry.travelDates}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Submitted</p>
-                  <p>{formatDate(inquiry.createdAt)}</p>
-                </div>
-              </div>
-              
-              <div className="flex justify-between items-center pt-2 border-t">
-                <button
-                  onClick={() => setSelectedInquiry(inquiry)}
-                  className="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1"
-                >
-                  <AiOutlineEye size={16} /> View
-                </button>
-                <button
-                  onClick={() => deleteInquiry(inquiry._id)}
-                  className="text-red-600 hover:text-red-800 text-sm flex items-center gap-1"
-                >
-                  <AiOutlineDelete size={16} /> Delete
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Name</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Contact</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Email</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Destination</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Travel Dates</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Submitted</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {inquiries.map(inquiry => (
-                  <tr key={inquiry._id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {inquiry.name}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {inquiry.contact}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {inquiry.email}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {inquiry.destination}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(inquiry.travelDates).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(inquiry.createdAt)}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => setSelectedInquiry(inquiry)}
-                          className="text-blue-600 hover:text-blue-800"
-                          title="View details"
-                        >
-                          <AiOutlineEye size={18} />
-                        </button>
-                        <button
-                          onClick={() => deleteInquiry(inquiry._id)}
-                          className="text-red-600 hover:text-red-800"
-                          title="Delete"
-                        >
-                          <AiOutlineDelete size={18} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            ))}
           </div>
-        </div>
+          <Pagination />
+        </>
+      ) : (
+        <>
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Name</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Contact</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Email</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Destination</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Travel Dates</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Submitted</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {currentInquiries.map(inquiry => (
+                    <tr key={inquiry._id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {inquiry.name}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {inquiry.contact}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {inquiry.email}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {inquiry.destination}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(inquiry.travelDates).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {formatDate(inquiry.createdAt)}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setSelectedInquiry(inquiry)}
+                            className="text-blue-600 hover:text-blue-800"
+                            title="View details"
+                          >
+                            <AiOutlineEye size={18} />
+                          </button>
+                          <button
+                            onClick={() => deleteInquiry(inquiry._id)}
+                            className="text-red-600 hover:text-red-800"
+                            title="Delete"
+                          >
+                            <AiOutlineDelete size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination />
+          </div>
+        </>
       )}
 
       {selectedInquiry && (

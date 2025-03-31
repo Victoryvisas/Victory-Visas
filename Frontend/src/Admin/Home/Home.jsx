@@ -1,5 +1,8 @@
 import React, { Suspense, lazy, useMemo, useState } from "react";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaSignOutAlt } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logoutAdmin } from "../../redux/Adminslice";
 
 // Lazy-loaded components
 const AdminHeroSection = lazy(() => import("../AdminHeroSection"));
@@ -16,7 +19,6 @@ const AdminCountryForm = lazy(() => import("../AdminCountryForm"));
 const AdminFlightForm = lazy(() => import("../AdminFlightForm"));
 const AdminInsuranceForm = lazy(() => import("../AdminInsuranceForm"));
 
-
 // Fallback loader
 const Loader = () => (
   <div className="flex justify-center items-center h-full">
@@ -27,6 +29,8 @@ const Loader = () => (
 const Home = () => {
   const [selectedTab, setSelectedTab] = useState("Hero Section");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const navItems = useMemo(
     () => [
@@ -45,13 +49,22 @@ const Home = () => {
     []
   );
 
+  const handleLogout = () => {
+    // Clear token from localStorage
+    localStorage.removeItem("token");
+    // Dispatch logout action
+    dispatch(logoutAdmin());
+    // Redirect to login page
+    navigate("/admin-login");
+  };
+
   return (
     <div className="flex h-screen bg-gray-100 font-inter">
       {/* Sidebar Navigation */}
       <aside
         className={`bg-gray-800 text-gray-200 ${
           sidebarOpen ? "w-64" : "w-16"
-        } transition-all duration-300 py-6 shadow-md`}
+        } transition-all duration-300 py-6 shadow-md flex flex-col`}
       >
         <div className="flex justify-end px-4 mb-6">
           <FaBars
@@ -59,7 +72,8 @@ const Home = () => {
             onClick={() => setSidebarOpen(!sidebarOpen)}
           />
         </div>
-        <ul>
+        
+        <ul className="flex-1">
           {navItems.map((item) => (
             <li
               key={item.label}
@@ -72,6 +86,17 @@ const Home = () => {
             </li>
           ))}
         </ul>
+
+        {/* Logout Button */}
+        <div className="mt-auto px-4 py-3">
+          <button
+            onClick={handleLogout}
+            className="flex items-center w-full text-red-400 hover:text-red-300 transition"
+          >
+            <FaSignOutAlt className="mr-2" />
+            {sidebarOpen && <span>Logout</span>}
+          </button>
+        </div>
       </aside>
 
       {/* Main Content Area */}

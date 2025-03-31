@@ -1,6 +1,8 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import "./index.css";
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { motion } from "framer-motion";
+import "./index.css";
 import Navbar from "./Components/Navbar";
 import HeroSection from "./Components/HeroSection";
 import ServicesSection from "./Components/ServicesSection";
@@ -12,7 +14,7 @@ import BusinessVisaServices from "./pages/BusinessVisaServices";
 import FlightTickets from "./pages/FlightTickets";
 import CountriesSection from "./Components/CountriesSection";
 import TravelInsurance from "./pages/TravelInsurance";
-import SouthAfrica from "./pages/SouthAfrica"; 
+import SouthAfrica from "./pages/SouthAfrica";
 import Australia from "./pages/Australia";
 import NewZealand from "./pages/NewZeland";
 import USA from "./pages/USA";
@@ -21,20 +23,67 @@ import Canada from "./pages/Canada";
 import TouristVisaServices from "./pages/TouristVisaServices";
 import StudyVisaServices from "./pages/StudyVisaServices";
 import PermanentVisaServices from "./pages/PermanentVisaServices";
-import Home from "./Admin/Home";
+import Home from "./Admin/Home/Home";
 import Login from "./Admin/Login";
+import { setAdmin, logoutAdmin } from "./redux/Adminslice";
+import axios from "axios";
 
+// Auth Initializer Component
+const AuthInitializer = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const response = await axios.get("/api/victory-visas/admin/me", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        dispatch(setAdmin(response.data));
+      } catch (error) {
+        localStorage.removeItem("token");
+        dispatch(logoutAdmin());
+        if (window.location.pathname.startsWith("/admin")) {
+          navigate("/admin-login");
+        }
+      }
+    };
+
+    verifyAuth();
+  }, [dispatch, navigate]);
+
+  return null;
+};
+
+// Private Route Component
+const PrivateRoute = ({ children }) => {
+  const { isAuthenticated } = useSelector((state) => state.admin);
+  const location = useLocation();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/admin-login" state={{ from: location }} replace />;
+  }
+
+  return children;
+};
+
+// Main App Component
 function App() {
   return (
     <Router>
+      <AuthInitializer />
       <AppContent />
     </Router>
   );
 }
 
+// App Content Component
 const AppContent = () => {
   const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith('/admin');
+  const isAdminRoute = location.pathname.startsWith("/admin");
 
   return (
     <div className="app-container">
@@ -42,12 +91,12 @@ const AppContent = () => {
       
       <main className={isAdminRoute ? "admin-content" : ""}>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/business-visas" element={<BusinessVisaServices />} />
           <Route path="/tourist-visas" element={<TouristVisaServices />} />
           <Route path="/student-visas" element={<StudyVisaServices />} />
           <Route path="/permanent-residency" element={<PermanentVisaServices />} />
-
           <Route path="/flight-tickets" element={<FlightTickets />} />
           <Route path="/travel-insurance" element={<TravelInsurance />} />
           <Route path="/south-africa" element={<SouthAfrica />} />
@@ -57,9 +106,18 @@ const AppContent = () => {
           <Route path="/usa" element={<USA />} />
           <Route path="/canada" element={<Canada />} />
 
-          {/* Admin Panel - Navbar won't appear for these routes */}
-          <Route path="/admin" element={<Home />} />
+          {/* Admin Login (Public) */}
           <Route path="/admin-login" element={<Login />} />
+
+          {/* Protected Admin Routes */}
+          <Route
+            path="/admin/*"
+            element={
+              <PrivateRoute>
+                <Home />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </main>
 
@@ -68,6 +126,7 @@ const AppContent = () => {
   );
 };
 
+// Home Page Component
 const HomePage = () => {
   const sectionVariants = {
     hidden: { opacity: 0, y: 100 },
@@ -81,7 +140,6 @@ const HomePage = () => {
 
   return (
     <div>
-      {/* Hero Section */}
       <motion.div
         variants={sectionVariants}
         initial="hidden"
@@ -92,7 +150,6 @@ const HomePage = () => {
         <HeroSection />
       </motion.div>
 
-      {/* Services Section */}
       <motion.div
         variants={sectionVariants}
         initial="hidden"
@@ -103,7 +160,6 @@ const HomePage = () => {
         <ServicesSection />
       </motion.div>
 
-      {/* Countries Section */}
       <motion.div
         variants={sectionVariants}
         initial="hidden"
@@ -114,7 +170,6 @@ const HomePage = () => {
         <CountriesSection />
       </motion.div>
 
-      {/* About Us Section */}
       <motion.div
         variants={sectionVariants}
         initial="hidden"
@@ -125,7 +180,6 @@ const HomePage = () => {
         <AboutUs />
       </motion.div>
 
-      {/* Why Us Section */}
       <motion.div
         variants={sectionVariants}
         initial="hidden"
@@ -136,7 +190,6 @@ const HomePage = () => {
         <WhyUs />
       </motion.div>
 
-      {/* Contact Us Section */}
       <motion.div
         variants={sectionVariants}
         initial="hidden"

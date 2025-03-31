@@ -12,6 +12,9 @@ export default function CountryVisaAdmin() {
   const [selectedInquiry, setSelectedInquiry] = useState(null);
   const [notes, setNotes] = useState("");
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   const countries = ["Australia", "Canada", "Germany", "India", "UK", "USA", "Other"];
 
@@ -26,7 +29,7 @@ export default function CountryVisaAdmin() {
 
   useEffect(() => {
     fetchInquiries();
-  }, []);
+  }, [search, statusFilter, countryFilter]); // Added dependencies to refetch when filters change
 
   const fetchInquiries = async () => {
     try {
@@ -35,12 +38,22 @@ export default function CountryVisaAdmin() {
         params: { search, status: statusFilter, country: countryFilter }
       });
       setInquiries(data);
+      setCurrentPage(1); // Reset to first page when filters change
       setLoading(false);
     } catch (error) {
       console.error("Error fetching inquiries:", error);
       setLoading(false);
     }
   };
+
+  // Get current inquiries for pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentInquiries = inquiries.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(inquiries.length / itemsPerPage);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const updateStatus = async (id, status) => {
     try {
@@ -80,6 +93,48 @@ export default function CountryVisaAdmin() {
       case "rejected": return "bg-red-100 text-red-800";
       default: return "bg-gray-100 text-gray-800";
     }
+  };
+
+  // Pagination component
+  const Pagination = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(i);
+    }
+
+    return (
+      <div className="flex justify-center mt-4">
+        <nav className="inline-flex rounded-md shadow">
+          <button
+            onClick={() => paginate(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          {pageNumbers.map(number => (
+            <button
+              key={number}
+              onClick={() => paginate(number)}
+              className={`px-3 py-1 border-t border-b border-gray-300 bg-white text-sm font-medium ${
+                currentPage === number 
+                  ? 'bg-blue-50 text-blue-600 border-blue-500'
+                  : 'text-gray-500 hover:bg-gray-50'
+              }`}
+            >
+              {number}
+            </button>
+          ))}
+          <button
+            onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </nav>
+      </div>
+    );
   };
 
   return (
@@ -135,7 +190,7 @@ export default function CountryVisaAdmin() {
         </div>
       ) : isMobile ? (
         <div className="space-y-4">
-          {inquiries.map(inquiry => (
+          {currentInquiries.map(inquiry => (
             <div key={inquiry._id} className="bg-white rounded-lg shadow p-4">
               <div className="flex justify-between items-start mb-2">
                 <h3 className="font-medium">{inquiry.name}</h3>
@@ -191,75 +246,79 @@ export default function CountryVisaAdmin() {
               </div>
             </div>
           ))}
+          <Pagination />
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Date</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Name</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Country</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Visa Type</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Status</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {inquiries.map(inquiry => (
-                  <tr key={inquiry._id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(inquiry.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {inquiry.name}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {inquiry.country}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {inquiry.visaType}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      <select
-                        value={inquiry.status}
-                        onChange={(e) => updateStatus(inquiry._id, e.target.value)}
-                        className={`px-2 py-1 rounded text-xs md:text-sm ${getStatusColor(inquiry.status)}`}
-                      >
-                        <option value="new">New</option>
-                        <option value="contacted">Contacted</option>
-                        <option value="resolved">Resolved</option>
-                        <option value="rejected">Rejected</option>
-                      </select>
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => {
-                            setSelectedInquiry(inquiry);
-                            setNotes(inquiry.notes || "");
-                          }}
-                          className="text-blue-600 hover:text-blue-800"
-                          title="View details"
-                        >
-                          <AiOutlineEye size={18} />
-                        </button>
-                        <button
-                          onClick={() => deleteInquiry(inquiry._id)}
-                          className="text-red-600 hover:text-red-800"
-                          title="Delete"
-                        >
-                          <AiOutlineDelete size={18} />
-                        </button>
-                      </div>
-                    </td>
+        <>
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Date</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Name</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Country</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Visa Type</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Status</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {currentInquiries.map(inquiry => (
+                    <tr key={inquiry._id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(inquiry.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {inquiry.name}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {inquiry.country}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {inquiry.visaType}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        <select
+                          value={inquiry.status}
+                          onChange={(e) => updateStatus(inquiry._id, e.target.value)}
+                          className={`px-2 py-1 rounded text-xs md:text-sm ${getStatusColor(inquiry.status)}`}
+                        >
+                          <option value="new">New</option>
+                          <option value="contacted">Contacted</option>
+                          <option value="resolved">Resolved</option>
+                          <option value="rejected">Rejected</option>
+                        </select>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => {
+                              setSelectedInquiry(inquiry);
+                              setNotes(inquiry.notes || "");
+                            }}
+                            className="text-blue-600 hover:text-blue-800"
+                            title="View details"
+                          >
+                            <AiOutlineEye size={18} />
+                          </button>
+                          <button
+                            onClick={() => deleteInquiry(inquiry._id)}
+                            className="text-red-600 hover:text-red-800"
+                            title="Delete"
+                          >
+                            <AiOutlineDelete size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+          <Pagination />
+        </>
       )}
 
       {selectedInquiry && (

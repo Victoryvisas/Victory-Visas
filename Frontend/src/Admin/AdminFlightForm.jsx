@@ -11,6 +11,10 @@ const AdminFlightForm = () => {
   const [destinationFilter, setDestinationFilter] = useState("all");
   const [selectedInquiry, setSelectedInquiry] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   const destinations = ["New York", "London", "Paris", "Tokyo", "Dubai", "Other"];
 
@@ -36,6 +40,7 @@ const AdminFlightForm = () => {
         destination: destinationFilter !== "all" ? destinationFilter : undefined
       });
       setInquiries(data);
+      setCurrentPage(1); // Reset to first page when filters change
     } catch (error) {
       toast.error("Failed to load inquiries");
     } finally {
@@ -63,8 +68,8 @@ const AdminFlightForm = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Initial load
-  useEffect(() => { fetchInquiries(); }, []);
+  // Initial load and when filters change
+  useEffect(() => { fetchInquiries(); }, [destinationFilter]);
 
   // Date formatting
   const formatDate = (dateString) => 
@@ -75,6 +80,57 @@ const AdminFlightForm = () => {
       hour: '2-digit',
       minute: '2-digit'
     });
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentInquiries = inquiries.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(inquiries.length / itemsPerPage);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Pagination component
+  const Pagination = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(i);
+    }
+
+    return (
+      <div className="flex justify-center mt-4">
+        <nav className="inline-flex rounded-md shadow">
+          <button
+            onClick={() => paginate(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          {pageNumbers.map(number => (
+            <button
+              key={number}
+              onClick={() => paginate(number)}
+              className={`px-3 py-1 border-t border-b border-gray-300 bg-white text-sm font-medium ${
+                currentPage === number 
+                  ? 'bg-blue-50 text-blue-600 border-blue-500'
+                  : 'text-gray-500 hover:bg-gray-50'
+              }`}
+            >
+              {number}
+            </button>
+          ))}
+          <button
+            onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </nav>
+      </div>
+    );
+  };
 
   return (
     <div className="container mx-auto p-4 md:p-6">
@@ -122,117 +178,123 @@ const AdminFlightForm = () => {
           <p>No inquiries found matching your criteria.</p>
         </div>
       ) : isMobile ? (
-        <div className="space-y-4">
-          {inquiries.map(inquiry => (
-            <div key={inquiry._id} className="bg-white rounded-lg shadow p-4">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-medium">{inquiry.name}</h3>
-                <span className="px-2 py-1 rounded text-xs bg-blue-100 text-blue-800">
-                  {inquiry.destination}
-                </span>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2 text-sm mb-3">
-                <div>
-                  <p className="text-gray-500">Contact</p>
-                  <p>{inquiry.contact}</p>
+        <>
+          <div className="space-y-4">
+            {currentInquiries.map(inquiry => (
+              <div key={inquiry._id} className="bg-white rounded-lg shadow p-4">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-medium">{inquiry.name}</h3>
+                  <span className="px-2 py-1 rounded text-xs bg-blue-100 text-blue-800">
+                    {inquiry.destination}
+                  </span>
                 </div>
-                <div>
-                  <p className="text-gray-500">Travel Dates</p>
-                  <p>{inquiry.travelDates}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Passengers</p>
-                  <p>A: {inquiry.adults}, K: {inquiry.kids}, I: {inquiry.infants}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Submitted</p>
-                  <p>{formatDate(inquiry.createdAt)}</p>
-                </div>
-              </div>
-              
-              <div className="flex justify-between items-center pt-2 border-t">
-                <button
-                  onClick={() => setSelectedInquiry(inquiry)}
-                  className="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1"
-                >
-                  <AiOutlineEye size={16} /> View
-                </button>
                 
-                <button
-                  onClick={() => deleteInquiry(inquiry._id)}
-                  className="text-red-600 hover:text-red-800 text-sm flex items-center gap-1"
-                >
-                  <AiOutlineDelete size={16} /> Delete
-                </button>
+                <div className="grid grid-cols-2 gap-2 text-sm mb-3">
+                  <div>
+                    <p className="text-gray-500">Contact</p>
+                    <p>{inquiry.contact}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Travel Dates</p>
+                    <p>{inquiry.travelDates}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Passengers</p>
+                    <p>A: {inquiry.adults}, K: {inquiry.kids}, I: {inquiry.infants}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Submitted</p>
+                    <p>{formatDate(inquiry.createdAt)}</p>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center pt-2 border-t">
+                  <button
+                    onClick={() => setSelectedInquiry(inquiry)}
+                    className="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1"
+                  >
+                    <AiOutlineEye size={16} /> View
+                  </button>
+                  
+                  <button
+                    onClick={() => deleteInquiry(inquiry._id)}
+                    className="text-red-600 hover:text-red-800 text-sm flex items-center gap-1"
+                  >
+                    <AiOutlineDelete size={16} /> Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Name</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Contact</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Email</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Destination</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Travel Dates</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Passengers</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Submitted</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {inquiries.map(inquiry => (
-                  <tr key={inquiry._id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {inquiry.name}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {inquiry.contact}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {inquiry.email}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {inquiry.destination}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {inquiry.travelDates}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      A: {inquiry.adults}, K: {inquiry.kids}, I: {inquiry.infants}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(inquiry.createdAt)}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => setSelectedInquiry(inquiry)}
-                          className="text-blue-600 hover:text-blue-800"
-                          title="View details"
-                        >
-                          <AiOutlineEye size={18} />
-                        </button>
-                        <button
-                          onClick={() => deleteInquiry(inquiry._id)}
-                          className="text-red-600 hover:text-red-800"
-                          title="Delete"
-                        >
-                          <AiOutlineDelete size={18} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            ))}
           </div>
-        </div>
+          <Pagination />
+        </>
+      ) : (
+        <>
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Name</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Contact</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Email</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Destination</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Travel Dates</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Passengers</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Submitted</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {currentInquiries.map(inquiry => (
+                    <tr key={inquiry._id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {inquiry.name}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {inquiry.contact}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {inquiry.email}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {inquiry.destination}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {inquiry.travelDates}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        A: {inquiry.adults}, K: {inquiry.kids}, I: {inquiry.infants}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        {formatDate(inquiry.createdAt)}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setSelectedInquiry(inquiry)}
+                            className="text-blue-600 hover:text-blue-800"
+                            title="View details"
+                          >
+                            <AiOutlineEye size={18} />
+                          </button>
+                          <button
+                            onClick={() => deleteInquiry(inquiry._id)}
+                            className="text-red-600 hover:text-red-800"
+                            title="Delete"
+                          >
+                            <AiOutlineDelete size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination />
+          </div>
+        </>
       )}
 
       {selectedInquiry && (
