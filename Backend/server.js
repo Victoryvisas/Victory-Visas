@@ -6,7 +6,7 @@ import rateLimit from "express-rate-limit";
 import connectDB from "./db.js";
 
 // Route imports
-import adminRoutes from "./routes/AdminRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import heroSectionRoutes from "./routes/heroSectionRoutes.js";
 import servicesRoutes from "./routes/serviceSectionRoutes.js";
 import countriesRoutes from "./routes/countriesRoutes.js";
