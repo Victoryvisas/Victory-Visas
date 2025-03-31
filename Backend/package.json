@@ -4,7 +4,9 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
+    "postinstall": "chmod +x node_modules/.bin/nodemon",
     "dev": "npx nodemon server.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -18,8 +20,10 @@
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.1.0",
+    "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.12.1"
+    "mongoose": "^8.12.1",
+    "npx": "^10.2.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
