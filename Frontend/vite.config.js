@@ -7,8 +7,12 @@ export default defineConfig({
     loader: "jsx", // Ensure JSX is enabled
   },
   server: {
+    port: 3000, // Make sure the server uses the correct port for Render
     proxy: {
-      "/api": "http://localhost:5000", // Forward any API request to the backend
+      "/api": "https://api.victoryvisas.com", // Forward API requests to the backend API URL
     },
+  },
+  build: {
+    outDir: 'dist', // Set the output directory for build artifacts
   },
 });
