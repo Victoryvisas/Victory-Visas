@@ -36,7 +36,7 @@ const AdminAboutUs = () => {
     setServices(updatedServices);
   };
 
-  const BASE_URL = "http://localhost:5000";
+  const BASE_URL = "https://api.victoryvisas.com"; // Replace with your actual API base URL
 
   const handleSaveChanges = async () => {
     try {

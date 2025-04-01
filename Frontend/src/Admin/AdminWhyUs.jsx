@@ -11,7 +11,7 @@ const AdminWhyUs = () => {
     // Fetch the current "Why Us" data from the backend
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/why-us");
+        const response = await axios.get("https://api.victoryvisas.com/api/why-us"); // Full URL for API
         setFeatures(response.data.features || []);
       } catch (err) {
         setError("Failed to load 'Why Us' content.");
@@ -43,7 +43,7 @@ const AdminWhyUs = () => {
 
     setLoading(true);
     try {
-      const response = await axios.put("http://localhost:5000/api/why-us", {
+      const response = await axios.put("https://api.victoryvisas.com/api/why-us", { // Full URL for API
         features,
       });
       alert(response.data.message);
