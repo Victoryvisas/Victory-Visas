@@ -7,9 +7,11 @@ export default defineConfig({
     loader: "jsx", // Ensure JSX is enabled
   },
   server: {
-    port: 3000, // Make sure the server uses the correct port for Render
+    host: "0.0.0.0", // Ensure it's publicly accessible
+    // eslint-disable-next-line no-undef
+    port: process.env.PORT || 3000, // Use dynamic port provided by Render
     proxy: {
-      "/api": "https://api.victoryvisas.com", // Forward API requests to the backend API URL
+      "/api": "https://api.victoryvisas.com", // Forward API requests to the production API URL
     },
   },
   build: {
