@@ -34,7 +34,7 @@ const AdminServiceForm = () => {
   const fetchRequests = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/api/visaRequests", {
+      const { data } = await axios.get("https://api.victoryvisas.com/api/visaRequests", {
         params: { 
           search, 
           visaType: visaTypeFilter !== "all" ? visaTypeFilter : undefined 
@@ -62,7 +62,7 @@ const AdminServiceForm = () => {
   const deleteRequest = async (id) => {
     if (window.confirm("Are you sure you want to delete this request?")) {
       try {
-        await axios.delete(`/api/visaRequests/${id}`);
+        await axios.delete(`https://api.victoryvisas.com/api/visaRequests/${id}`);
         toast.success("Request deleted successfully");
         fetchRequests();
       } catch (error) {

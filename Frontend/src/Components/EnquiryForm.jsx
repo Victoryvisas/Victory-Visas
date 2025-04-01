@@ -45,7 +45,7 @@ const EnquiryForm = ({ service, onClose }) => {
         service: service || "General Enquiry"
       };
       
-      await axios.post("/api/enquiries", payload);
+      await axios.post("https://api.victoryvisas.com/api/enquiries", payload);
       alert("Thank you for your enquiry! We'll contact you soon.");
       onClose();
     } catch (error) {

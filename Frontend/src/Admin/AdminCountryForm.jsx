@@ -34,7 +34,7 @@ export default function CountryVisaAdmin() {
   const fetchInquiries = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/api/visa-inquiries", {
+      const { data } = await axios.get("https://api.victoryvisas.com/api/visa-inquiries", {
         params: { search, status: statusFilter, country: countryFilter }
       });
       setInquiries(data);
@@ -57,7 +57,7 @@ export default function CountryVisaAdmin() {
 
   const updateStatus = async (id, status) => {
     try {
-      await axios.put(`/api/visa-inquiries/${id}`, { status });
+      await axios.put(`https://api.victoryvisas.com/api/visa-inquiries/${id}`, { status });
       fetchInquiries();
     } catch (error) {
       console.error("Error updating status:", error);
@@ -67,7 +67,7 @@ export default function CountryVisaAdmin() {
   const deleteInquiry = async (id) => {
     if (window.confirm("Are you sure you want to delete this inquiry?")) {
       try {
-        await axios.delete(`/api/visa-inquiries/${id}`);
+        await axios.delete(`https://api.victoryvisas.com/api/visa-inquiries/${id}`);
         fetchInquiries();
       } catch (error) {
         console.error("Error deleting inquiry:", error);
@@ -77,7 +77,7 @@ export default function CountryVisaAdmin() {
 
   const saveNotes = async () => {
     try {
-      await axios.put(`/api/visa-inquiries/${selectedInquiry._id}`, { notes });
+      await axios.put(`https://api.victoryvisas.com/api/visa-inquiries/${selectedInquiry._id}`, { notes });
       fetchInquiries();
       setSelectedInquiry(null);
     } catch (error) {

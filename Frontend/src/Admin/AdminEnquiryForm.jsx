@@ -24,7 +24,7 @@ const AdminEnquiryForm = () => {
       if (statusFilter !== "all") params.status = statusFilter;
       if (searchTerm) params.search = searchTerm;
       
-      const response = await axios.get("/api/enquiries", { params });
+      const response = await axios.get("https://api.victoryvisas.com/api/enquiries", { params });
       setEnquiries(response.data);
       setCurrentPage(1); // Reset to first page when filters change
       setError("");
@@ -52,7 +52,7 @@ const AdminEnquiryForm = () => {
   // Update enquiry status
   const updateStatus = async (id, newStatus) => {
     try {
-      await axios.put(`/api/enquiries/${id}`, { status: newStatus });
+      await axios.put(`https://api.victoryvisas.com/api/enquiries/${id}`, { status: newStatus });
       setEnquiries(enquiries.map(enquiry => 
         enquiry._id === id ? { ...enquiry, status: newStatus } : enquiry
       ));
@@ -66,7 +66,7 @@ const AdminEnquiryForm = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this enquiry?")) {
       try {
-        await axios.delete(`/api/enquiries/${id}`);
+        await axios.delete(`https://api.victoryvisas.com/api/enquiries/${id}`);
         setEnquiries(enquiries.filter(enquiry => enquiry._id !== id));
       } catch (err) {
         console.error("Error deleting enquiry:", err);
@@ -80,7 +80,7 @@ const AdminEnquiryForm = () => {
     if (!selectedEnquiry) return;
     
     try {
-      await axios.put(`/api/enquiries/${selectedEnquiry._id}`, { notes });
+      await axios.put(`https://api.victoryvisas.com/api/enquiries/${selectedEnquiry._id}`, { notes });
       setEnquiries(enquiries.map(enquiry => 
         enquiry._id === selectedEnquiry._id ? { ...enquiry, notes } : enquiry
       ));

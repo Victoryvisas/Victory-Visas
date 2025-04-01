@@ -31,7 +31,7 @@ const AdminTravelInsurance = () => {
   const fetchInquiries = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/api/travel-insurance/inquiries", {
+      const { data } = await axios.get("https://api.victoryvisas.com/api/travel-insurance/inquiries", {
         params: { 
           search, 
           destination: destinationFilter !== "all" ? destinationFilter : undefined 

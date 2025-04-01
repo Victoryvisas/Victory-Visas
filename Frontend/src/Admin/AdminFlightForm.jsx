@@ -35,7 +35,7 @@ const AdminFlightForm = () => {
   const fetchInquiries = async () => {
     try {
       setLoading(true);
-      const data = await fetchData("/api/flightTickets", {
+      const data = await fetchData("https://api.victoryvisas.com/api/flightTickets", {
         search,
         destination: destinationFilter !== "all" ? destinationFilter : undefined
       });
@@ -52,7 +52,7 @@ const AdminFlightForm = () => {
     if (!window.confirm("Delete this inquiry?")) return;
     
     try {
-      await axios.delete(`/api/flightTickets/${id}`);
+      await axios.delete(`https://api.victoryvisas.com/api/flightTickets/${id}`);
       toast.success("Inquiry deleted");
       await fetchInquiries();
     } catch (error) {

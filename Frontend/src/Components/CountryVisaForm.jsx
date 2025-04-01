@@ -15,7 +15,7 @@ export default function CountryVisaForm() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post("/api/visa-inquiries", formData);
+      await axios.post("https://api.victoryvisas.comapi/visa-inquiries", formData);
       alert("Inquiry submitted successfully!");
       setFormData({
         name: "", email: "", phone: "", country: "", visaType: "", message: ""

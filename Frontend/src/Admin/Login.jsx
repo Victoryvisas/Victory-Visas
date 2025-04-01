@@ -31,7 +31,7 @@ function Login() {
 const login = async () => {
   try {
     dispatch(ShowLoading());
-    const response = await axios.post("/api/victory-visas/admin-login", credentials);
+    const response = await axios.post("https://api.victoryvisas.com/api/victory-visas/admin-login", credentials);
     dispatch(HideLoading());
     
     if (response.data.success) {

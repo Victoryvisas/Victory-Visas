@@ -39,7 +39,7 @@ const AuthInitializer = () => {
       if (!token) return;
 
       try {
-        const response = await axios.get("/api/victory-visas/admin/me", {
+        const response = await axios.get("https://api.victoryvisas.com/api/victory-visas/admin/me", {
           headers: { Authorization: `Bearer ${token}` }
         });
         dispatch(setAdmin(response.data));
