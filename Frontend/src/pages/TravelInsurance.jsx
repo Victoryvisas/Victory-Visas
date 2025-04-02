@@ -40,7 +40,7 @@ const TravelInsurance = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "/api/travel-insurance/submit",
+        "https://api.victoryvisas.com/api/travel-insurance/submit",
         formData
       );
       console.log(response.data);
