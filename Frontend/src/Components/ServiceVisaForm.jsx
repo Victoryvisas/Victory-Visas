@@ -21,7 +21,7 @@ const ServiceVisaForm = () => {
     e.preventDefault();
     try {
       // Updated endpoint to match your backend route
-      const response = await axios.post('http://localhost:5000/api/visaRequests/submit', formData);
+      const response = await axios.post('/api/visaRequests/submit', formData);
       toast.success("Request submitted successfully!");
       setFormData({
         name: '',

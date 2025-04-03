@@ -36,11 +36,11 @@ const AdminAboutUs = () => {
     setServices(updatedServices);
   };
 
-  const BASE_URL = "http://localhost:5000";
+  
 
   const handleSaveChanges = async () => {
     try {
-      const response = await axios.put(`${BASE_URL}/api/about`, {
+      const response = await axios.put(`/api/about`, {
         aboutText,
         services,
       });
